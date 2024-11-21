@@ -4,6 +4,10 @@ import Donar from '../views/Donar.vue';
 import Servicios from '../views/Servicios.vue';
 import Login from '../views/Login.vue';
 import EmpleadoDashboard from '../views/EmpleadoDashboard.vue';
+import AdministrarEmpleados from '../views/AdministrarEmpleados.vue';
+import EmpleadoDetalle from '../views/EmpleadoDetalle.vue';
+import Reportes from '../views/Reportes.vue';
+
 
 
 const routes = [
@@ -31,6 +35,24 @@ const routes = [
     path: '/empleados',
     name: 'EmpleadoDashboard',
     component: EmpleadoDashboard,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin',
+    name: 'AdministrarEmpleados',
+    component: AdministrarEmpleados,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/admin/:usuarioId',
+    name: 'EmpleadoDetalle',
+    component: EmpleadoDetalle,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/reportes',
+    name: 'Reportes',
+    component: Reportes,
     meta: { requiresAuth: true },
   },
 ];

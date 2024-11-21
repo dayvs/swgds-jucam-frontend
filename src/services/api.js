@@ -18,5 +18,20 @@ export default {
     },
     resetPassword(token) {
       return apiClient.post(`/auth/reset-password?token=${token}`);
-    }
+    },
+    obtenerUsuarios() {
+      return apiClient.get('/usuarios');
+    },
+    crearUsuario(usuario) {
+      return apiClient.post('/usuarios', usuario);
+    },
+    obtenerUsuarioPorId(usuarioId) {
+      return apiClient.get(`/usuarios/${usuarioId}`);
+    },
+    eliminarUsuario(usuarioId) {
+      return apiClient.delete(`/usuarios/${usuarioId}`);
+    },
+    resetPasswordUsuario(usuarioId) {
+      return apiClient.post(`/usuarios/${usuarioId}/reset-password`);
+    },
 };

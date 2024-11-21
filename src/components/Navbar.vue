@@ -3,11 +3,8 @@
     <div class="container">
       <!-- Enlace a INICIO -->
       <router-link class="navbar-brand" to="/">INICIO</router-link>
-      <!-- Mostrar "> LOGIN" cuando la ruta actual es 'Login' -->
-      <span v-if="currentRouteName === 'Login'" class="breadcrumb-text"> &gt; LOGIN</span>
-      <!-- Mostrar "> SERVICIOS" cuando la ruta actual es 'Servicios'" -->
-      <span v-else-if="currentRouteName === 'Servicios'" class="breadcrumb-text"> &gt; SERVICIOS</span>
-      <!-- Puedes agregar más condiciones para otras rutas -->
+      <!-- Mostrar ruta actual -->
+      <span v-if="currentRouteName" class="breadcrumb-text"> &gt; {{ currentRouteName.toUpperCase() }}</span>
     </div>
   </nav>
 </template>
@@ -17,14 +14,14 @@ export default {
   name: 'Navbar',
   computed: {
     currentRouteName() {
-      return this.$route.name;
+      return this.$route.name !== 'LandingPage' ? this.$route.name : '';
     },
   },
 };
 </script>
 
 <style scoped>
-/* Tus estilos existentes */
+
 .navbar-brand {
   color: #193238;
   font-family: 'Inter', sans-serif;

@@ -48,9 +48,25 @@
         <div v-if="errorMessage" class="error-message mt-2 text-center">
           {{ errorMessage }}
         </div>
-        <!-- Botón de Envío -->
+        <!-- Botón de Envío con Animación de Loading -->
         <div class="text-center">
-          <button type="submit" class="btn btn-primary mt-4">Iniciar sesión</button>
+          <button
+            type="submit"
+            class="btn btn-primary mt-4"
+            :disabled="loginInProgress"
+          >
+            <template v-if="loginInProgress">
+              <span
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+                style="color: #FFFFFF;"
+              ></span>
+            </template>
+            <template v-else>
+              Iniciar sesión
+            </template>
+          </button>
         </div>
       </form>
       <!-- Olvidaste tu contraseña -->
@@ -93,7 +109,7 @@
             </div>
             <!-- Pie del Modal -->
             <div class="modal-footer justify-content-center">
-              <template v-if="!resetMessage">              
+              <template v-if="!resetMessage">
                 <!-- Botón de Cerrar -->
                 <button
                   v-if="!resetInProgress"
@@ -118,7 +134,7 @@
                     role="status"
                     aria-hidden="true"
                   ></span>
-                </button>                
+                </button>
               </template>
               <template v-else>
                 <!-- Botón de Cerrar después de Reiniciar Contraseña -->
@@ -149,6 +165,7 @@ export default {
       resetEmail: '',
       resetInProgress: false,
       resetMessage: '',
+      loginInProgress: false, // estado para controlar la animación de loading
     };
   },
   methods: {
@@ -174,6 +191,7 @@ export default {
         this.errorMessage = 'El correo debe tener un formato válido';
         return;
       }
+      this.loginInProgress = true; // Activar animación de loading
       try {
         const response = await axios.post(
           'https://swgds-jucam-backend.onrender.com/auth/login',
@@ -194,6 +212,8 @@ export default {
         } else {
           this.errorMessage = 'Ocurrió un error. Por favor, intenta nuevamente.';
         }
+      } finally {
+        this.loginInProgress = false; // Desactivar animación de loading
       }
     },
     openModal() {
@@ -316,7 +336,6 @@ export default {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
-  text-align: center;
 }
 
 .btn-close {
@@ -325,10 +344,9 @@ export default {
 }
 
 .spinner-border {
-  color: #FFFFFF;
+  color: #FFFFFF; /* Color del spinner */
 }
 
-/* Estilos para el botón "Cerrar" personalizado */
 .btn-secondary-custom {
   background-color: #EBEDED;
   color: #193238;
