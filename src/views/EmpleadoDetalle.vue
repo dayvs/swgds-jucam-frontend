@@ -79,6 +79,9 @@ export default {
           `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}`
         );
         this.empleado = response.data;
+        if (typeof this.empleado.rol === 'string') {
+          this.empleado.rol = { nombre: this.empleado.rol };
+        }
       } catch (error) {
         console.error('Error al obtener el empleado:', error);
       }
@@ -86,9 +89,19 @@ export default {
     async guardarCambios() {
       try {
         const usuarioId = this.$route.params.usuarioId;
+        const payload = {
+          nombre: this.empleado.nombre,
+          apellidos: this.empleado.apellidos,
+          email: this.empleado.email,
+          estado: this.empleado.estado,
+          rol: {
+            nombre: this.empleado.rol.nombre,  // ✅ Correctamente estructurado
+          },
+        };
+
         await axios.put(
           `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}`,
-          this.empleado
+          payload
         );
         alert('Cambios guardados exitosamente');
       } catch (error) {
