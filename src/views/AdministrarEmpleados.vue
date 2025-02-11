@@ -3,11 +3,16 @@
     <div class="container py-5">
       <h2 class="title">Administrar Empleados</h2>
       <ul class="empleados-list mt-4">
-        <li v-for="empleado in empleados" :key="empleado.usuarioId" @click="verEmpleado(empleado.usuarioId)">
-          <i class="fas fa-user"></i>
+        <li v-for="empleado in empleados" :key="empleado.usuarioId" class="empleado-item">
           <div class="empleado-info">
-            <span class="nombre">{{ empleado.nombre }} {{ empleado.apellidos }} </span>
-            <span class="correo">{{ empleado.email }}</span>
+            <i class="fas fa-user empleado-icon"></i>
+            <div class="empleado-text">
+              <span class="nombre">{{ empleado.nombre }} {{ empleado.apellidos }}</span>
+              <span class="correo">{{ empleado.email }}</span>
+            </div>
+          </div>
+          <div class="flecha-detalle" @click="verEmpleado(empleado.usuarioId)">
+            <i class="fas fa-arrow-right"></i>
           </div>
         </li>
       </ul>
@@ -239,14 +244,36 @@ export default {
 }
 
 .empleado-info {
-  text-align: left;
+  /* text-align: left; */
+  display: flex;
+  align-items: center;
+}
+
+.empleado-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 10px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.empleado-icon {
+  font-size: 32px; /* Ícono más grande */
+  color: #193238;
+  margin-right: 15px;
+}
+
+.empleado-text {
+  display: flex;
+  flex-direction: column;
 }
 
 .nombre {
   color: #193238;
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .correo {
@@ -331,4 +358,11 @@ export default {
   background: none;
   border: none;
 }
+
+.flecha-detalle {
+  font-size: 18px;
+  color: #193238;
+  cursor: pointer;
+}
+
 </style>
