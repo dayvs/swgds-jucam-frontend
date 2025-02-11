@@ -6,7 +6,7 @@
         <li v-for="empleado in empleados" :key="empleado.usuarioId" @click="verEmpleado(empleado.usuarioId)">
           <i class="fas fa-user"></i>
           <div class="empleado-info">
-            <span class="nombre">{{ empleado.nombre }} {{ empleado.apellidos }}</span>
+            <span class="nombre">{{ empleado.nombre }} {{ empleado.apellidos }} </span>
             <span class="correo">{{ empleado.email }}</span>
           </div>
         </li>
