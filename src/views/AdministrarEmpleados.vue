@@ -244,7 +244,7 @@ export default {
 }
 
 .empleado-info {
-  /* text-align: left; */
+  text-align: left;
   display: flex;
   align-items: center;
 }
@@ -255,7 +255,6 @@ export default {
   justify-content: space-between;
   padding: 15px 10px;
   border-bottom: 1px solid #e0e0e0;
-  cursor: pointer;
 }
 
 .empleado-icon {
@@ -363,6 +362,10 @@ export default {
   font-size: 18px;
   color: #193238;
   cursor: pointer;
+}
+
+.flecha-detalle:hover {
+  color: #17c6ed; 
 }
 
 </style>
