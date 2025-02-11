@@ -1,3 +1,4 @@
+<!-- views/AdministrarEmpleados.vue -->
 <template>
   <div class="admin-empleados" style="background-color: #F6F8F9;">
     <div class="container py-5">
@@ -68,6 +69,15 @@
                     placeholder="Ingrese el correo electrónico"
                   />
                   <div v-if="errores.email" class="text-danger">{{ errores.email }}</div>
+                </div>                
+                  <div v-if="errores.apellidos" class="text-danger">{{ errores.apellidos }}</div>
+                </div>
+                <div class="mb-3">
+                  <label for="rol" class="form-label">Rol</label>
+                  <select id="rol" v-model="nuevoEmpleado.rol.nombre" class="form-control">
+                    <option value="Empleado">Empleado</option>
+                    <option value="Administrador">Administrador</option>
+                  </select>                  
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" @click="cerrarModal">Cancelar</button>
