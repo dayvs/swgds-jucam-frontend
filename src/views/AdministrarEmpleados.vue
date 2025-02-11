@@ -230,8 +230,7 @@ export default {
   padding: 0;
 }
 
-.empleados-list li {
-  cursor: pointer;
+.empleados-list li { 
   display: flex;
   align-items: center;
   margin-bottom: 15px;
