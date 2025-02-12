@@ -20,7 +20,7 @@
       </ol>
       
       <!-- Espaciado adicional entre secciones -->
-      <div class="extra-space"></div>
+      <div class="extra-space"><p></p></div>
       
       <h2 class="subtitle">Dona ahora</h2>
     </div>
@@ -41,7 +41,7 @@
 
       <!-- Correo Electrónico -->
       <div class="form-group">
-        <label for="email">Correo Electrónico</label>
+        <label for="email">Correo electrónico</label>
         <input 
           type="email" 
           id="email" 
@@ -71,7 +71,7 @@
 
       <!-- Monto de Donación -->
       <div class="form-group">
-        <label for="monto">Monto de Donación</label>
+        <label for="monto">Monto de donación</label>
         <input 
           type="text" 
           id="monto" 
