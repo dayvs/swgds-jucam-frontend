@@ -129,10 +129,9 @@ export default {
 .donar-container {
   max-width: 600px;
   margin: auto;
-  padding: 0px;
+  padding: 40px;
   background: rgba(246, 248, 249, 1);
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;  
   text-align: center;
   font-family: 'Inter', sans-serif;
 }
