@@ -278,4 +278,15 @@ label {
 .btn-donar:hover {
   background-color: #15b3d9;
 }
+
+.thank-you-message {
+  margin-top: 15px;
+  color: #555;
+  font-size: 14px;
+}
+
+.spinner-border {
+  color: #fff;
+}
+
 </style>
