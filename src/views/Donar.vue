@@ -18,12 +18,15 @@
         <li>Especifica el monto de la donación.</li>
         <li>Haz clic en el botón "Donar ahora".</li>
       </ol>
-      <p></p>
-      <p></p>
+      
+      <!-- Espaciado adicional entre secciones -->
+      <div class="extra-space"></div>
+      
       <h2 class="subtitle">Dona ahora</h2>
     </div>
 
     <form @submit.prevent="procesarDonacion" class="donation-form">
+      
       <!-- Nombre Completo -->
       <div class="form-group">        
         <label for="nombre">Nombre completo</label>
@@ -49,6 +52,22 @@
         />
         <div v-if="errores.email" class="error-message">{{ errores.email }}</div>
       </div>
+
+
+      <!-- Teléfono -->
+      <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <input 
+          type="text" 
+          id="telefono" 
+          v-model="telefono" 
+          placeholder="Ingresa tu número de teléfono"
+          class="form-control"
+          @blur="validarTelefono"
+        />
+        <div v-if="errores.telefono" class="error-message">{{ errores.telefono }}</div>
+      </div>
+
 
       <!-- Monto de Donación -->
       <div class="form-group">
@@ -86,9 +105,11 @@ export default {
     return {
       nombre: '',
       email: '',
+      telefono: '',
       monto: '',
       errores: {
         email: '',
+        telefono: '',
         monto: ''
       },
       loading: false
@@ -113,6 +134,7 @@ export default {
     },
     procesarDonacion() {
       this.validarEmail();
+      this.validarTelefono();
       this.validarMonto();
 
       if (!this.errores.email && !this.errores.monto) {
