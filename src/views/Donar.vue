@@ -81,6 +81,7 @@
         <div v-if="errores.monto" class="error-message">{{ errores.monto }}</div>
         <p></p>
         <p></p>
+        <p></p>
       </div>
 
       <!-- Botón Donar -->

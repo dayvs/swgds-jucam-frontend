@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingPage from '../views/LandingPage.vue';
 import Donar from '../views/Donar.vue';
+import DonacionExito from '../views/DonacionExito.vue';
+import DonacionError from '../views/DonacionError.vue';
 import Servicios from '../views/Servicios.vue';
 import Login from '../views/Login.vue';
 import EmpleadoDashboard from '../views/EmpleadoDashboard.vue';
@@ -20,6 +22,16 @@ const routes = [
     path: '/donar',
     name: 'Donar',
     component: Donar,
+  },
+  { 
+    path: '/donacionexito', 
+    name: 'DonacionExito', 
+    component: DonacionExito, 
+  },
+  { 
+    path: '/donacionerror', 
+    name: 'DonacionError', 
+    component: DonacionError, 
   },
   {
     path: '/servicios',
