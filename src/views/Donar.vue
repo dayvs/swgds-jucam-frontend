@@ -7,8 +7,9 @@
       <p class="description">
         Tu donación ayuda a financiar proyectos esenciales como la educación para niños desfavorecidos, la investigación médica y la protección del medio ambiente. 
         Cada contribución, grande o pequeña, tiene un impacto significativo en la vida de muchas personas y en la preservación de nuestro planeta.
-        Gracias a tu generosidad, podemos continuar con nuestra misión de hacer del mundo un lugar mejor.
+        <br/>Gracias a tu generosidad, podemos continuar con nuestra misión de hacer del mundo un lugar mejor.
       </p>
+      <p></p>
 
       <h2 class="subtitle">Cómo donar</h2>
       <ol class="donation-steps">
@@ -17,6 +18,7 @@
         <li>Especifica el monto de la donación.</li>
         <li>Haz clic en el botón "Donar ahora".</li>
       </ol>
+      <p></p>
     </div>
 
     <form @submit.prevent="procesarDonacion" class="donation-form">
