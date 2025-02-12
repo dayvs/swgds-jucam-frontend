@@ -20,6 +20,8 @@
       </ol>
       <p></p>
       <p></p>
+      <p></p>
+      <p></p>
     </div>
 
     <form @submit.prevent="procesarDonacion" class="donation-form">
