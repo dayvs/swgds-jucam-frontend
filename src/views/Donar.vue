@@ -27,6 +27,7 @@
     <form @submit.prevent="procesarDonacion" class="donation-form">
       <!-- Nombre Completo -->
       <div class="form-group">
+        <p></p>
         <label for="nombre">Nombre completo</label>
         <input 
           type="text" 
