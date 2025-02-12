@@ -83,6 +83,8 @@
         <p></p>
         <p></p>
       </div>
+      
+      <div class="extra-space"></div>
 
       <!-- Botón Donar -->
       <button type="submit" class="btn-donar" :disabled="loading">
