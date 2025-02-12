@@ -19,6 +19,7 @@
         <li>Haz clic en el botón "Donar ahora".</li>
       </ol>
       <p></p>
+      <p></p>
     </div>
 
     <form @submit.prevent="procesarDonacion" class="donation-form">
@@ -60,6 +61,7 @@
           @blur="validarMonto"
         />
         <div v-if="errores.monto" class="error-message">{{ errores.monto }}</div>
+        <p></p>
       </div>
 
       <!-- Botón Donar -->
