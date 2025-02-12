@@ -26,12 +26,14 @@ const routes = [
   { 
     path: '/donacionexito', 
     name: 'DonacionExito', 
-    component: DonacionExito, 
+    component: DonacionExito,
+    meta: { hideNavbar: true },
   },
   { 
     path: '/donacionerror', 
     name: 'DonacionError', 
-    component: DonacionError, 
+    component: DonacionError,
+    meta: { hideNavbar: true }, 
   },
   {
     path: '/servicios',
