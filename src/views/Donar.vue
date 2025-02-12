@@ -7,9 +7,8 @@
       <p class="description">
         Tu donación ayuda a financiar proyectos esenciales como la educación para niños desfavorecidos, la investigación médica y la protección del medio ambiente. 
         Cada contribución, grande o pequeña, tiene un impacto significativo en la vida de muchas personas y en la preservación de nuestro planeta.
-        <br/>Gracias a tu generosidad, podemos continuar con nuestra misión de hacer del mundo un lugar mejor.
+        <br />Gracias a tu generosidad, podemos continuar con nuestra misión de hacer del mundo un lugar mejor.
       </p>
-      <p></p>
 
       <h2 class="subtitle">Cómo donar</h2>
       <ol class="donation-steps">
@@ -18,17 +17,16 @@
         <li>Especifica el monto de la donación.</li>
         <li>Haz clic en el botón "Donar ahora".</li>
       </ol>
-      
+
       <!-- Espaciado adicional entre secciones -->
-      <div class="extra-space"><p></p></div>
-      
+      <div class="extra-space"></div>
+
       <h2 class="subtitle">Dona ahora</h2>
     </div>
 
     <form @submit.prevent="procesarDonacion" class="donation-form">
-      
       <!-- Nombre Completo -->
-      <div class="form-group">        
+      <div class="form-group">
         <label for="nombre">Nombre completo</label>
         <input 
           type="text" 
@@ -36,12 +34,14 @@
           v-model="nombre" 
           placeholder="Ingresa tu nombre completo"
           class="form-control"
+          @blur="validarCampo('nombre')"
         />
+        <div v-if="errores.nombre" class="error-message">{{ errores.nombre }}</div>
       </div>
 
       <!-- Correo Electrónico -->
       <div class="form-group">
-        <label for="email">Correo electrónico</label>
+        <label for="email">Correo Electrónico</label>
         <input 
           type="email" 
           id="email" 
@@ -52,7 +52,6 @@
         />
         <div v-if="errores.email" class="error-message">{{ errores.email }}</div>
       </div>
-
 
       <!-- Teléfono -->
       <div class="form-group">
@@ -68,10 +67,9 @@
         <div v-if="errores.telefono" class="error-message">{{ errores.telefono }}</div>
       </div>
 
-
       <!-- Monto de Donación -->
       <div class="form-group">
-        <label for="monto">Monto de donación</label>
+        <label for="monto">Monto de Donación</label>
         <input 
           type="text" 
           id="monto" 
@@ -81,7 +79,6 @@
           @blur="validarMonto"
         />
         <div v-if="errores.monto" class="error-message">{{ errores.monto }}</div>
-        <p></p>
       </div>
 
       <!-- Botón Donar -->
@@ -108,6 +105,7 @@ export default {
       telefono: '',
       monto: '',
       errores: {
+        nombre: '',
         email: '',
         telefono: '',
         monto: ''
@@ -116,34 +114,57 @@ export default {
     };
   },
   methods: {
+    validarCampo(campo) {
+      if (!this[campo]) {
+        this.errores[campo] = 'Este campo es obligatorio';
+      } else {
+        this.errores[campo] = '';
+      }
+    },
     validarEmail() {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!this.email.match(emailRegex)) {
+      if (!this.email) {
+        this.errores.email = 'Este campo es obligatorio';
+      } else if (!this.email.match(emailRegex)) {
         this.errores.email = 'Ingresa un correo electrónico válido';
       } else {
         this.errores.email = '';
       }
     },
+    validarTelefono() {
+      const telefonoRegex = /^\d{10}$/;
+      if (!this.telefono) {
+        this.errores.telefono = 'Este campo es obligatorio';
+      } else if (!this.telefono.match(telefonoRegex)) {
+        this.errores.telefono = 'Ingresa un teléfono válido';
+      } else {
+        this.errores.telefono = '';
+      }
+    },
     validarMonto() {
       const montoRegex = /^\d{1,6}(\.\d{1,2})?$/;
-      if (!this.monto.match(montoRegex)) {
+      if (!this.monto) {
+        this.errores.monto = 'Este campo es obligatorio';
+      } else if (!this.monto.match(montoRegex)) {
         this.errores.monto = 'Ingresa un monto correcto';
       } else {
         this.errores.monto = '';
       }
     },
     procesarDonacion() {
+      this.validarCampo('nombre');
       this.validarEmail();
       this.validarTelefono();
       this.validarMonto();
 
-      if (!this.errores.email && !this.errores.monto) {
+      if (!this.errores.nombre && !this.errores.email && !this.errores.telefono && !this.errores.monto) {
         this.loading = true;
         setTimeout(() => {
           alert('Donación procesada exitosamente.');
           this.loading = false;
           this.nombre = '';
           this.email = '';
+          this.telefono = '';
           this.monto = '';
         }, 2000);
       }
@@ -153,23 +174,23 @@ export default {
 </script>
 
 <style scoped>
+/* Contenedor principal */
 .donar-container {
   max-width: 600px;
   margin: auto;
   padding: 40px;
   background: rgba(246, 248, 249, 1);
-  border-radius: 8px;  
+  border-radius: 8px;
   text-align: center;
   font-family: 'Inter', sans-serif;
 }
 
+/* Títulos */
 .title {
   color: #193238;
   font-weight: 700;
   font-size: 24px;
-  text-align: center;
 }
-
 
 /* Sección de información alineada a la izquierda */
 .donation-info {
@@ -184,6 +205,7 @@ export default {
   margin-top: 20px;
 }
 
+/* Descripción */
 .description {
   color: #555;
   font-size: 16px;
@@ -199,6 +221,12 @@ export default {
   font-weight: 500;
 }
 
+/* Espaciado adicional entre secciones */
+.extra-space {
+  margin-bottom: 30px;
+}
+
+/* Estilos del formulario */
 .form-group {
   text-align: left;
   margin-top: 15px;
@@ -217,7 +245,6 @@ label {
   padding: 10px;
   font-size: 16px;
   background-color: #EBEDED;
-  border: 1px solid #ccc;
   border: none;
   border-radius: 5px;
   color: #193238;
@@ -234,6 +261,7 @@ label {
   margin-top: 5px;
 }
 
+/* Botón Donar */
 .btn-donar {
   background-color: #17C6ED;
   color: #fff;
@@ -243,21 +271,9 @@ label {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
-  transition: 0.3s;
 }
 
 .btn-donar:hover {
   background-color: #15b3d9;
-}
-
-.thank-you-message {
-  margin-top: 15px;
-  color: #555;
-  font-size: 14px;
-}
-
-.spinner-border {
-  color: #fff;
 }
 </style>
