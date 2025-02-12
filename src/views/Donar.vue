@@ -2,20 +2,22 @@
   <div class="donar-container">
     <h1 class="title">Haz una Donación</h1>
 
-    <h2 class="subtitle">¿Por qué tu donación importa?</h2>
-    <p class="description">
-      Tu donación ayuda a financiar proyectos esenciales como la educación para niños desfavorecidos, la investigación médica y la protección del medio ambiente. 
-      Cada contribución, grande o pequeña, tiene un impacto significativo en la vida de muchas personas y en la preservación de nuestro planeta.
-      Gracias a tu generosidad, podemos continuar con nuestra misión de hacer del mundo un lugar mejor.
-    </p>
+    <div class="donation-info">
+      <h2 class="subtitle">¿Por qué tu donación importa?</h2>
+      <p class="description">
+        Tu donación ayuda a financiar proyectos esenciales como la educación para niños desfavorecidos, la investigación médica y la protección del medio ambiente. 
+        Cada contribución, grande o pequeña, tiene un impacto significativo en la vida de muchas personas y en la preservación de nuestro planeta.
+        Gracias a tu generosidad, podemos continuar con nuestra misión de hacer del mundo un lugar mejor.
+      </p>
 
-    <h2 class="subtitle">Cómo donar</h2>
-    <ol class="donation-steps">
-      <li>Ingresa tu nombre completo.</li>
-      <li>Proporciona tu dirección de correo electrónico.</li>
-      <li>Especifica el monto de la donación.</li>
-      <li>Haz clic en el botón "Donar ahora".</li>
-    </ol>
+      <h2 class="subtitle">Cómo donar</h2>
+      <ol class="donation-steps">
+        <li>Ingresa tu nombre completo.</li>
+        <li>Proporciona tu dirección de correo electrónico.</li>
+        <li>Especifica el monto de la donación.</li>
+        <li>Haz clic en el botón "Donar ahora".</li>
+      </ol>
+    </div>
 
     <form @submit.prevent="procesarDonacion" class="donation-form">
       <!-- Nombre Completo -->
@@ -127,7 +129,7 @@ export default {
 .donar-container {
   max-width: 600px;
   margin: auto;
-  padding: 40px;
+  padding: 0px;
   background: rgba(246, 248, 249, 1);
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
