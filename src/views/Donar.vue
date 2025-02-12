@@ -128,7 +128,7 @@ export default {
   max-width: 600px;
   margin: auto;
   padding: 40px;
-  background: #fff;
+  background: rgba(246, 248, 249, 1);
   border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
@@ -139,8 +139,16 @@ export default {
   color: #193238;
   font-weight: 700;
   font-size: 24px;
+  text-align: center;
 }
 
+
+/* Sección de información alineada a la izquierda */
+.donation-info {
+  text-align: left;
+}
+
+/* Subtítulos */
 .subtitle {
   color: #193238;
   font-weight: 600;
@@ -154,6 +162,7 @@ export default {
   line-height: 1.5;
 }
 
+/* Lista de instrucciones */
 .donation-steps {
   text-align: left;
   padding-left: 20px;
@@ -174,14 +183,23 @@ label {
   margin-bottom: 5px;
 }
 
+/* Estilos del input */
 .form-control {
   width: 100%;
   padding: 10px;
   font-size: 16px;
+  background-color: #EBEDED;
   border: 1px solid #ccc;
+  border: none;
   border-radius: 5px;
+  color: #193238;
 }
 
+.form-control::placeholder {
+  color: #7E8A8C;
+}
+
+/* Mensaje de error */
 .error-message {
   color: #EA3232;
   font-size: 14px;
