@@ -20,14 +20,12 @@
       </ol>
       <p></p>
       <p></p>
-      <p></p>
-      <p></p>
+      <h2 class="subtitle">Dona ahora</h2>
     </div>
 
     <form @submit.prevent="procesarDonacion" class="donation-form">
       <!-- Nombre Completo -->
-      <div class="form-group">
-        <p></p>
+      <div class="form-group">        
         <label for="nombre">Nombre completo</label>
         <input 
           type="text" 
