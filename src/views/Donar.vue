@@ -101,6 +101,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'Donar',
   data() {
@@ -162,16 +164,30 @@ export default {
       this.validarTelefono();
       this.validarMonto();
 
-      if (!this.errores.nombre && !this.errores.email && !this.errores.telefono && !this.errores.monto) {
+       if (!this.errores.nombre && !this.errores.email && !this.errores.telefono && !this.errores.monto) {
         this.loading = true;
-        setTimeout(() => {
-          alert('Donación procesada exitosamente.');
-          this.loading = false;
-          this.nombre = '';
-          this.email = '';
-          this.telefono = '';
-          this.monto = '';
-        }, 2000);
+        axios
+          .post('https://swgds-jucam-backend.onrender.com/pago', {
+            name: this.nombre,
+            email: this.email,
+            phone: this.telefono,
+            amount: parseFloat(this.monto)
+          })
+          .then(response => {
+            const paymentUrl = response.data.paymentUrl;
+            if (paymentUrl) {
+              window.location.href = paymentUrl;
+            } else {
+              alert('No se pudo obtener la URL de pago. Inténtalo de nuevo.');
+            }
+          })
+          .catch(error => {
+            console.error('Error al procesar la donación:', error);
+            alert('Ocurrió un error al procesar tu donación. Por favor, intenta nuevamente.');
+          })
+          .finally(() => {
+            this.loading = false;
+          });
       }
     }
   }
