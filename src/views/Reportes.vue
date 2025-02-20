@@ -80,13 +80,12 @@ export default {
         hour: '2-digit', minute: '2-digit'
       };
       return new Date(dateStr).toLocaleDateString('es-ES', options);
-    }
-  },
+    },
     formatCurrency(value) {
       if (typeof value !== "number") {
         value = parseFloat(value);
       }
-
+      
       return new Intl.NumberFormat('es-MX', {
         style: 'currency', 
         currency: 'MXN',
