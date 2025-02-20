@@ -47,27 +47,51 @@ const routes = [
   },
   {
     path: '/empleados',
-    name: 'EmpleadoDashboard',
+    name: 'Empleados',
     component: EmpleadoDashboard,
-    meta: { requiresAuth: true },
+    meta: { 
+      requiresAuth: true,
+      breadcrumb: [
+        { label: 'Empleados', path: '/empleados' }
+      ]
+    },
   },
   {
     path: '/admin',
-    name: 'AdministrarEmpleados',
+    name: 'Admin',
     component: AdministrarEmpleados,
-    meta: { requiresAuth: true },
+    meta: { 
+      requiresAuth: true,
+      breadcrumb: [
+        { label: 'Empleados', path: '/empleados' },
+        { label: 'Admin', path: '/admin' }
+      ]
+    },
   },
   {
     path: '/admin/:usuarioId',
-    name: 'EmpleadoDetalle',
+    name: 'Empleado',
     component: EmpleadoDetalle,
-    meta: { requiresAuth: true },
+    meta: { 
+      requiresAuth: true,
+      breadcrumb: [
+        { label: 'Empleados', path: '/empleados' },
+        { label: 'Admin', path: '/admin' },
+        { label: 'Empleado' }  
+      ]
+    },
   },
   {
     path: '/reportes',
     name: 'Reportes',
     component: Reportes,
-    meta: { requiresAuth: true },
+    meta: { 
+      requiresAuth: true,
+      breadcrumb: [
+        { label: 'Empleados', path: '/empleados' },
+        { label: 'Reportes', path: '/reportes' }
+      ]
+    },
   },
 ];
 

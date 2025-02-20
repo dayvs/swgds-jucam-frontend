@@ -3,8 +3,21 @@
     <div class="container">
       <!-- Breadcrumb navigation -->
       <span class="breadcrumb-text">
-        <router-link class="navbar-brand" to="/">INICIO</router-link>
-        <span v-if="currentRouteName"> &gt; {{ currentRouteName.toUpperCase() }}</span>
+        <router-link class="navbar-brand" to="/">Inicio</router-link>
+        <!-- Iterar sobre cada crumb definido en la ruta -->
+        <template v-for="(crumb, index) in breadcrumbs" :key="index">
+          <span> &gt; </span>
+          <!-- Si se definió una ruta, mostrar como enlace -->
+          <router-link
+            v-if="crumb.path"
+            class="breadcrumb-item"
+            :to="crumb.path"
+          >
+            {{ crumb.label }}
+          </router-link>
+          <!-- Si no, simplemente mostrar el label -->
+          <span v-else class="breadcrumb-item">{{ crumb.label }}</span>
+        </template>
       </span>
     </div>
   </nav>
@@ -14,8 +27,12 @@
 export default {
   name: 'Navbar',
   computed: {
-    currentRouteName() {
-      return this.$route.name && this.$route.name !== 'LandingPage' ? this.$route.name : '';
+    breadcrumbs() {
+      // Si la ruta actual tiene la propiedad breadcrumb en meta, úsala.
+      // Si no, devuelve un arreglo vacío.
+      return this.$route.meta && this.$route.meta.breadcrumb
+        ? this.$route.meta.breadcrumb
+        : [];
     },
   },
 };
@@ -23,7 +40,8 @@ export default {
 
 <style scoped>
 
-.navbar-brand {
+.navbar-brand,
+.breadcrumb-item {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -37,7 +55,7 @@ export default {
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 5px; /* Espacio entre "Inicio" y la ruta actual */
+  gap: 2px; /* Espacio entre "Inicio" y la ruta actual */
 }
 
 .navbar-light .navbar-nav .nav-link {
