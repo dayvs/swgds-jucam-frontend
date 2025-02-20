@@ -25,7 +25,7 @@
               <td>{{ formatDate(donacion.fechaDonacion) }}</td>
               <td>{{ donacion.donador ? donacion.donador.nombre : 'Anónimo' }}</td>
               <td>{{ donacion.donador ? donacion.donador.email : '-' }}</td>
-              <td>{{ donacion.monto | currency }}</td>
+              <td>{{ formatCurrency(donacion.monto) }}</td>
               <td>{{ donacion.metodoPago }}</td>
               <td>{{ donacion.estado }}</td>
               <td>{{ donacion.transaccionId }}</td>
@@ -33,7 +33,7 @@
           </tbody>
         </table>
         <div class="total-donaciones mt-4">
-          <h4>Total de Donaciones: {{ totalDonaciones | currency }}</h4>
+          <h4>Total de Donaciones: {{ formatCurrency(totalDonaciones) }}</h4>
         </div>
       </div>
     </div>
@@ -82,11 +82,11 @@ export default {
       return new Date(dateStr).toLocaleDateString('es-ES', options);
     }
   },
-  filters: {
-    currency(value) {
+    formatCurrency(value) {
       if (typeof value !== "number") {
         value = parseFloat(value);
       }
+
       return new Intl.NumberFormat('es-MX', {
         style: 'currency', 
         currency: 'MXN',
