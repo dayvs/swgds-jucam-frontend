@@ -3,6 +3,8 @@ import LandingPage from '../views/LandingPage.vue';
 import Donar from '../views/Donar.vue';
 import DonacionExito from '../views/DonacionExito.vue';
 import DonacionError from '../views/DonacionError.vue';
+import SuscripcionExito from '../views/SuscripcionExito.vue';
+import SuscripcionError from '../views/SuscripcionError.vue';
 import Servicios from '../views/Servicios.vue';
 import Login from '../views/Login.vue';
 import EmpleadoDashboard from '../views/EmpleadoDashboard.vue';
@@ -34,6 +36,18 @@ const routes = [
     name: 'DonacionError', 
     component: DonacionError,
     meta: { hideNavbar: true }, 
+  },
+  {
+    path: '/suscripcionexito',
+    name: 'SuscripcionExito',
+    component: SuscripcionExito,
+    meta: { hideNavbar: true },
+  },
+  {
+    path: '/suscripcionerror',
+    name: 'SuscripcionError',
+    component: SuscripcionError,
+    meta: { hideNavbar: true },
   },
   {
     path: '/servicios',
@@ -92,7 +106,8 @@ const routes = [
         { label: 'Reportes', path: '/reportes' }
       ]
     },
-  },
+  }, 
+  
 ];
 
 const router = createRouter({
