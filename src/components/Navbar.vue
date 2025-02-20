@@ -49,13 +49,18 @@ export default {
   text-decoration: none;
 }
 
-.breadcrumb-text > .breadcrumb-item:first-child {
+.breadcrumb-text {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 5px; 
+}
+
+.breadcrumb-text > .breadcrumb-item:first-child {
+  margin-right: 0;
+  padding-right: 0;
 }
 
 .navbar-light .navbar-nav .nav-link {
