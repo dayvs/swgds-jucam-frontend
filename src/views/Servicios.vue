@@ -106,7 +106,7 @@ export default {
 
 /* Tarjetas de servicio */
 .servicio-card {
-  background-color: #FFFFFF;
+  background: rgba(246, 248, 249, 1);  
   border-radius: 8px;
   display: flex;
   flex-direction: column;
