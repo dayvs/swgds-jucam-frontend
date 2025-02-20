@@ -55,7 +55,7 @@ export default {
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 2px; /* Espacio entre "Inicio" y la ruta actual */
+  gap: 0px; /* Espacio entre "Inicio" y la ruta actual */
 }
 
 .navbar-light .navbar-nav .nav-link {
