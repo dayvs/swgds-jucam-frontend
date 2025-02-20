@@ -55,7 +55,7 @@ export default {
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 0px; /* Espacio entre "Inicio" y la ruta actual */
+  gap: 5px; /* Espacio entre "Inicio" y la ruta actual */
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -67,6 +67,7 @@ export default {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
+  gap: 5px;
 }
 
 .breadcrumb-text a:hover {
