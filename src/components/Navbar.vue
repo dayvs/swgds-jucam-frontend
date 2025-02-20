@@ -58,9 +58,9 @@ export default {
   gap: 5px; 
 }
 
-.breadcrumb-text > .breadcrumb-item:first-child {
-  margin-right: 0;
-  padding-right: 0;
+.breadcrumb-text .navbar-brand {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
 }
 
 .navbar-light .navbar-nav .nav-link {
