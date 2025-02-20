@@ -2,7 +2,7 @@
   <div class="servicios-page container py-5">
     <h1 class="title">Nuestros servicios</h1>
     <p class="description">
-      Ofrecemos distintos servicios para apoyar a nuestra comunidad. Puedes suscribirte a cualquiera de ellos para contribuir y beneficiarte de nuestras iniciativas. Únicamente da click en "Suscribirse", llena tu información, completa el pago, ¡y listo! Quedarás suscrito.
+      Ofrecemos distintos servicios para apoyar a nuestra comunidad. Puedes suscribirte a cualquiera de ellos para contribuir y beneficiarte de nuestras iniciativas. Únicamente da click en "Suscribirse", llena tu información, completa el pago, ¡y listo!.
     </p>
 
     <div class="row mt-5">
@@ -110,7 +110,6 @@ export default {
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .icono-servicio i {
