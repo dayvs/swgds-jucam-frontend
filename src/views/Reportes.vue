@@ -87,7 +87,12 @@ export default {
       if (typeof value !== "number") {
         value = parseFloat(value);
       }
-      return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value);
+      return new Intl.NumberFormat('es-MX', {
+        style: 'currency', 
+        currency: 'MXN',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2 
+      }).format(value);
     }
   }
 };
