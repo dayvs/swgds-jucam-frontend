@@ -49,13 +49,13 @@ export default {
   text-decoration: none;
 }
 
-.breadcrumb-text {
+.breadcrumb-text > .breadcrumb-item:first-child {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 5px; /* Espacio entre "Inicio" y la ruta actual */
+  gap: 5px; 
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -67,7 +67,6 @@ export default {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
-  gap: 5px;
 }
 
 .breadcrumb-text a:hover {
