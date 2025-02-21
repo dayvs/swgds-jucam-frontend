@@ -1,12 +1,8 @@
 <template>
     <div class="suscripcion-error-container">
-      <!-- Ícono de manos (mismo que en DonacionError) -->
+      <!-- Ícono de error -->
       <div class="icon-container">
-        <i class="fas fa-hands-helping"></i>
-        <!-- Puedes superponer algún ícono de error si lo deseas -->
-        <!-- Ejemplo:
-        <i class="fas fa-times-circle error-icon"></i>
-        -->
+        <i class="fas fa-credit-card"></i>        
       </div>
   
       <h1 class="title">¡Tu pago fue declinado!</h1>
@@ -15,10 +11,10 @@
         Tu contribución nos ayuda a continuar con nuestra misión de mejorar la vida de muchas personas.
       </p>
   
-      <!-- Ícono de tarjeta o lo que prefieras -->
+      <!-- Ícono de tarjeta o lo que prefieras 
       <div class="icono-tarjeta mt-3">
         <i class="fas fa-credit-card"></i>
-      </div>
+      </div> -->
   
       <!-- Botón para reintentar -->
       <button @click="intentarNuevamente" class="btn-reintentar">
