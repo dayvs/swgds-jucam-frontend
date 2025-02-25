@@ -46,35 +46,41 @@ export default {
           icono: 'fas fa-user-graduate', 
           titulo: 'Taller de Liderazgo Juvenil',
           subtitulo: 'Conviértete en un líder que aborde temas relevantes para tu comunidad',
-          descripcion: 'Taller enfocado en capacitar a jóvenes para convertirse en líderes en sus comunidades, impulsando proyectos sociales que aborden problemas como la pobreza y la desigualdad. Este taller puede ayudar a los jóvenes a desarrollar habilidades de liderazgo, trabajo en equipo y gestión de proyectos.'
+          descripcion: 'Taller enfocado en capacitar a jóvenes para convertirse en líderes en sus comunidades, impulsando proyectos sociales que aborden problemas como la pobreza y la desigualdad. Este taller puede ayudar a los jóvenes a desarrollar habilidades de liderazgo, trabajo en equipo y gestión de proyectos.',
+          subscription_link: 'https://pago.clip.mx/suscripcion/954d5763-81b2-4b8b-84e2-465c349a2f47'
         },
         {
           icono: 'fas fa-people-carry', 
           titulo: 'Taller de Desarrollo Comunitario',
           subtitulo: 'Ayuda a tu comunidad en proyectos que tengan impacto real',
-          descripcion: 'Enseña a los participantes cómo identificar necesidades en sus comunidades y cómo intervenir eficazmente para mejorar la calidad de vida de los más vulnerables. Los asistentes aprenderán a crear diagnósticos comunitarios y a colaborar con diversas instituciones.'
+          descripcion: 'Enseña a los participantes cómo identificar necesidades en sus comunidades y cómo intervenir eficazmente para mejorar la calidad de vida de los más vulnerables. Los asistentes aprenderán a crear diagnósticos comunitarios y a colaborar con diversas instituciones.',
+          subscription_link: 'https://pago.clip.mx/suscripcion/baf65f58-74b8-49c7-a577-44dc0dcbfc45'
         },
         {
           icono: 'fas fa-hands-helping', 
           titulo: 'Programa de Voluntariado',
           subtitulo: 'Participa en actividades de voluntariado y programas comunitarios de JUCAM',
-          descripcion: 'Este programa ofrece oportunidades para participar en actividades de voluntariado y programas comunitarios organizados por JUCAM. Esto puede incluir desde trabajo en campo hasta la organización de eventos colectivos.'
+          descripcion: 'Este programa ofrece oportunidades para participar en actividades de voluntariado y programas comunitarios organizados por JUCAM. Esto puede incluir desde trabajo en campo hasta la organización de eventos colectivos.',
+          subscription_link: 'https://pago.clip.mx/suscripcion/9bebc5fe-f2fd-4919-bcf4-174d88b19a59'
         },
         {
           icono: 'fas fa-briefcase', 
           titulo: 'Consultoría y Servicios de Apoyo',
           subtitulo: 'Recibe asesoría especializada para impulsar tu desarrollo comunitario',
-          descripcion: 'JUCAM cuenta con expertos en distintas áreas que ofrecen servicios de consultoría, asesoramiento o capacitación como parte de la suscripción, enfocándose en temas relacionados con el desarrollo comunitario.'
+          descripcion: 'JUCAM cuenta con expertos en distintas áreas que ofrecen servicios de consultoría, asesoramiento o capacitación como parte de la suscripción, enfocándose en temas relacionados con el desarrollo comunitario.',
+          subscription_link: 'https://pago.clip.mx/suscripcion/5e6e2f85-54af-4a86-9b0d-b4c560ca2778'
         }
       ],
     };
   },
   methods: {
     suscribirse(servicio) {
-      // Aquí irá la lógica para suscribirse al servicio.
-      // De momento, solo mostramos un alert o console.log.
-      console.log(`Suscribirse a: ${servicio.titulo}`);
-      alert(`Te suscribirás al servicio: ${servicio.titulo}. (Pendiente de lógica con la API)`);
+      // Redirige al usuario al link de suscripción provisto
+      if (servicio.subscription_link) {
+        window.location.href = servicio.subscription_link;
+      } else {
+        alert('No se encontró el link de suscripción.');
+      }
     }
   }
 };
