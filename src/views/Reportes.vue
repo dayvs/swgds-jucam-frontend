@@ -8,36 +8,60 @@
       </div>
 
       <!-- Filtros -->
-      <div class="filters mb-4">
-        <div class="row">
-          <div class="col-md-3">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="donacionesCheck" v-model="filters.includeDonaciones" />
-              <label class="form-check-label" for="donacionesCheck">Donaciones</label>
-            </div>
-            <div class="form-check mt-2">
-              <input type="checkbox" class="form-check-input" id="suscripcionesCheck" v-model="filters.includeSuscripciones" />
-              <label class="form-check-label" for="suscripcionesCheck">Suscripciones</label>
-            </div>
+      <!-- Usamos row align-items-center para alinear checkboxes, select y botones en una sola fila -->
+      <div class="row align-items-center mb-4">
+        <!-- Checkboxes -->
+        <div class="col-md-3 d-flex flex-column align-items-start">
+          <div class="form-check d-flex align-items-center mb-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="donacionesCheck"
+              v-model="filters.includeDonaciones"
+            />
+            <label class="form-check-label ms-1" for="donacionesCheck">Donaciones</label>
           </div>
-          <div class="col-md-4">
-            <select class="form-select" v-model="selectedRange" @change="onRangeChange">
-              <option value="day">Último día</option>
-              <option value="week">Última semana</option>
-              <option value="month">Último mes</option>
-              <option value="year">Último año</option>
-              <option value="custom">Rango de fechas</option>
-            </select>
-          </div>
-          <div class="col-md-5" v-if="selectedRange === 'custom'">
-            <div class="input-group">
-              <input type="datetime-local" class="form-control" v-model="customStartDate" />
-              <span class="input-group-text">a</span>
-              <input type="datetime-local" class="form-control" v-model="customEndDate" />
-            </div>
+          <div class="form-check d-flex align-items-center">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="suscripcionesCheck"
+              v-model="filters.includeSuscripciones"
+            />
+            <label class="form-check-label ms-1" for="suscripcionesCheck">Suscripciones</label>
           </div>
         </div>
-        <div class="mt-3">
+
+        <!-- Selector de rango (Último día, semana, mes, etc.) -->
+        <div class="col-md-3">
+          <select class="form-select" v-model="selectedRange" @change="onRangeChange">
+            <option value="day">Último día</option>
+            <option value="week">Última semana</option>
+            <option value="month">Último mes</option>
+            <option value="year">Último año</option>
+            <option value="custom">Rango de fechas</option>
+          </select>
+        </div>
+
+        <!-- Date picker (si se selecciona "custom") -->
+        <div class="col-md-4" v-if="selectedRange === 'custom'">
+          <div class="input-group">
+            <input
+              type="datetime-local"
+              class="form-control"
+              v-model="customStartDate"
+            />
+            <span class="input-group-text">a</span>
+            <input
+              type="datetime-local"
+              class="form-control"
+              v-model="customEndDate"
+            />
+          </div>
+        </div>
+
+        <!-- Botones -->
+        <div class="col-md-2 text-end mt-3 mt-md-0">
           <button class="btn btn-primary" @click="fetchDashboard">Aplicar Filtros</button>
           <button class="btn btn-primary ms-2" @click="downloadCSV">Descargar reporte</button>
         </div>
@@ -339,7 +363,7 @@ export default {
         this.pieChartInstance.destroy();
       }
       console.log('Datos para pie chart:', this.dashboard.pieChart);
-      
+
       // Mapeo de service_id a nombre de servicio
       const serviceMapping = {
         "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
@@ -347,13 +371,13 @@ export default {
         "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
         "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
       };
-      
-      // Mapea cada plan (service_id) a su nombre usando la misma paleta que en el donut chart
+
+      // Mapa cada plan (service_id) a su nombre usando la misma paleta que en el donut chart
       const palette = ['#17C6ED', '#1cc88a'];
       const labels = this.dashboard.pieChart.map(item => serviceMapping[item.plan] || item.plan);
       const dataValues = this.dashboard.pieChart.map(item => item.monto);
       const backgroundColors = labels.map((_, index) => palette[index % palette.length]);
-      
+
       this.pieChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
@@ -368,8 +392,8 @@ export default {
             tooltip: {
               callbacks: {
                 label: (context) => {
-                  const index = context.dataIndex;
-                  const originalItem = this.dashboard.pieChart[index];
+                  const i = context.dataIndex;
+                  const originalItem = this.dashboard.pieChart[i];
                   const serviceName = serviceMapping[originalItem.plan] || originalItem.plan;
                   const value = context.raw;
                   const porcentaje = originalItem.porcentaje || 0;
@@ -384,8 +408,14 @@ export default {
       });
       console.log('Pie chart creado:', this.pieChartInstance);
     },
-    getRandomColor() {
-      return '#' + Math.floor(Math.random() * 16777215).toString(16);
+    getServiceName(id) {
+      const serviceMapping = {
+        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
+        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
+        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
+        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+      };
+      return serviceMapping[id] || id;
     },
     formatDate(dateStr) {
       const options = { 
@@ -442,15 +472,6 @@ export default {
         text = text.replace(regex, serviceMapping[id]);
       }
       return text;
-    },
-    getServiceName(id) {
-      const serviceMapping = {
-        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
-        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
-        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
-        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
-      };
-      return serviceMapping[id] || id;
     },
     openDonadorModal(item) {
       this.modalDonador.data = {
@@ -509,9 +530,21 @@ export default {
   color: #193238;
   border: none;
 }
-.btn-success {
-  background-color: #28a745;
-  border: none;
+
+/* Checkboxes color y margen */
+.form-check-input:checked {
+  background-color: #17C6ED;
+  border-color: #17C6ED;
+}
+.form-check-label {
+  margin-left: 0.25rem;
+  line-height: 1;
+}
+
+/* Ajusta la altura del checkbox si deseas */
+.form-check-input {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 /* Modales para Donador y Suscriptor */
@@ -546,17 +579,4 @@ export default {
   font-family: 'Inter', sans-serif;
   font-weight: 700;
 }
-
-/* Personalizar checkboxes cuando están chequeados */
-.form-check-input:checked {
-  background-color: #17C6ED;
-  border-color: #17C6ED;
-}
-
-/* Reducir el margen entre checkbox y texto */
-.form-check-label {
-  margin-left: 0.25rem;
-  line-height: 1;
-}
-
 </style>
