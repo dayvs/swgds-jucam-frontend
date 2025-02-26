@@ -4,7 +4,7 @@
       <!-- Encabezado con título -->
       <div class="text-center mb-4">
         <h2 class="title">Reportes de Donaciones</h2>
-        <div class="row d-flex justify-content-between align-items-end mb-4"> 
+        <div class="col-md-3 d-flex flex-column align-items-end"> 
           <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
         </div>       
       </div>
