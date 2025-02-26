@@ -59,7 +59,6 @@
         </div>
         <!-- Donut Chart principal -->
         <div class="chart-container mb-5">
-          <!-- Se agrega ref para acceder al elemento -->
           <canvas id="donutChart" ref="donutChart"></canvas>
         </div>
         <!-- Tablas de Donaciones y Suscripciones -->
@@ -166,7 +165,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -278,7 +276,11 @@ export default {
         });
     },
     renderDonutChart() {
-      const canvas = this.$refs.donutChart;
+      // Usar el ref; si hay duplicados, se selecciona el primero
+      let canvas = this.$refs.donutChart;
+      if (Array.isArray(canvas)) {
+        canvas = canvas[0];
+      }
       console.log('Canvas donutChart:', canvas);
       if (!canvas) {
         console.error('Error: Canvas "donutChart" no se encontró en el DOM.');
@@ -323,7 +325,10 @@ export default {
       console.log('Donut chart creado:', this.donutChartInstance);
     },
     renderPieChart() {
-      const canvas = this.$refs.pieChart;
+      let canvas = this.$refs.pieChart;
+      if (Array.isArray(canvas)) {
+        canvas = canvas[0];
+      }
       console.log('Canvas pieChart:', canvas);
       if (!canvas) {
         console.error('Error: Canvas "pieChart" no se encontró en el DOM.');
