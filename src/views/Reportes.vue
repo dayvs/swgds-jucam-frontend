@@ -263,20 +263,20 @@ export default {
       axios.get(url)
         .then(response => {
           this.dashboard = response.data;
-          this.$nextTick(() => {
-            this.renderDonutChart();
-            this.renderPieChart();
-          });
         })
         .catch(error => {
           console.error('Error fetching dashboard data:', error);
         })
         .finally(() => {
           this.loading = false;
+          // Esperar a que el DOM se actualice (v-else ya renderizó)
+          this.$nextTick(() => {
+            this.renderDonutChart();
+            this.renderPieChart();
+          });
         });
     },
     renderDonutChart() {
-      // Usar el ref; si hay duplicados, se selecciona el primero
       let canvas = this.$refs.donutChart;
       if (Array.isArray(canvas)) {
         canvas = canvas[0];
