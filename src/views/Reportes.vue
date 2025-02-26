@@ -12,11 +12,11 @@
         <div class="row">
           <div class="col-md-3">
             <div class="form-check">
-              <input type="checkbox" class="form-check-input" id="donacionesCheck" v-model="filters.includeDonaciones">
+              <input type="checkbox" class="form-check-input" id="donacionesCheck" v-model="filters.includeDonaciones" />
               <label class="form-check-label" for="donacionesCheck">Donaciones</label>
             </div>
             <div class="form-check mt-2">
-              <input type="checkbox" class="form-check-input" id="suscripcionesCheck" v-model="filters.includeSuscripciones">
+              <input type="checkbox" class="form-check-input" id="suscripcionesCheck" v-model="filters.includeSuscripciones" />
               <label class="form-check-label" for="suscripcionesCheck">Suscripciones</label>
             </div>
           </div>
@@ -31,9 +31,9 @@
           </div>
           <div class="col-md-5" v-if="selectedRange === 'custom'">
             <div class="input-group">
-              <input type="datetime-local" class="form-control" v-model="customStartDate">
+              <input type="datetime-local" class="form-control" v-model="customStartDate" />
               <span class="input-group-text">a</span>
-              <input type="datetime-local" class="form-control" v-model="customEndDate">
+              <input type="datetime-local" class="form-control" v-model="customEndDate" />
             </div>
           </div>
         </div>
@@ -59,7 +59,8 @@
         </div>
         <!-- Donut Chart principal -->
         <div class="chart-container mb-5">
-          <canvas id="donutChart"></canvas>
+          <!-- Se agrega ref para acceder al elemento -->
+          <canvas id="donutChart" ref="donutChart"></canvas>
         </div>
         <!-- Tablas de Donaciones y Suscripciones -->
         <div class="row">
@@ -120,7 +121,7 @@
         <div class="text-center mt-5">
           <h4>Suscripciones</h4>
           <div class="chart-container" style="max-width: 500px; margin: 0 auto;">
-            <canvas id="pieChart"></canvas>
+            <canvas id="pieChart" ref="pieChart"></canvas>
           </div>
         </div>
       </div>
@@ -277,7 +278,7 @@ export default {
         });
     },
     renderDonutChart() {
-      const canvas = document.getElementById('donutChart');
+      const canvas = this.$refs.donutChart;
       console.log('Canvas donutChart:', canvas);
       if (!canvas) {
         console.error('Error: Canvas "donutChart" no se encontró en el DOM.');
@@ -322,7 +323,7 @@ export default {
       console.log('Donut chart creado:', this.donutChartInstance);
     },
     renderPieChart() {
-      const canvas = document.getElementById('pieChart');
+      const canvas = this.$refs.pieChart;
       console.log('Canvas pieChart:', canvas);
       if (!canvas) {
         console.error('Error: Canvas "pieChart" no se encontró en el DOM.');
