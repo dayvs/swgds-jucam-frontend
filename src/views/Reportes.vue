@@ -6,10 +6,10 @@
         <h2 class="title">Reportes de Donaciones</h2>        
       </div>
 
-      <!-- botón de cerrar sesión -->
+      <!-- botón de cerrar sesión 
       <div class="row d-flex justify-content-between align-items-end mb-4">       
         <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
-      </div>
+      </div> -->
 
       <!-- Filtros -->
       <!-- Fila 1: Checkboxes a la izquierda (sin tocarlos) -->
@@ -25,6 +25,7 @@
             <label class="form-check-label ms-1" for="donacionesCheck">
               Donaciones
             </label>
+            <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
           </div>
           <div class="form-check d-flex align-items-center">
             <input
