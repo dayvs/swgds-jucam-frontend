@@ -16,18 +16,20 @@
       <div class="row g-3 align-items-center mb-3">
         <div class="col-md-3 d-flex flex-column align-items-start">
           <div class="form-check d-flex align-items-center mb-2">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="donacionesCheck"
-              v-model="filters.includeDonaciones"
-            />
-            <label class="form-check-label ms-1" for="donacionesCheck">
-              Donaciones
-            </label>
-
-            <button class="btn btn-secondary align-items-end mb-4" @click="logout">Cerrar sesión</button>            
-            
+            <div class="col-auto text-center">            
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="donacionesCheck"
+                v-model="filters.includeDonaciones"
+              />
+              <label class="form-check-label ms-1" for="donacionesCheck">
+                Donaciones
+              </label>
+              <button class="btn btn-secondary align-items-end mb-4" @click="logout">
+                Cerrar sesión
+              </button>
+            </div>
           </div>
           <div class="form-check d-flex align-items-center">
             <input
