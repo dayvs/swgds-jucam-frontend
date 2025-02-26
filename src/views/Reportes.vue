@@ -7,10 +7,10 @@
         <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
       </div>
 
-      <!-- Filtros -->
-      <!-- Fila 1: Checkboxes a la izquierda (sin tocarlos) -->
-      <div class="row g-3 align-items-center mb-3">
-        <div class="col-md-3 d-flex flex-column align-items-start">
+      <!-- FILA 1: Donaciones + datepicker (selector de rango) -->
+      <div class="row align-items-center mb-3 g-3">
+        <!-- Donaciones (checkbox) a la izquierda -->
+        <div class="col-md-6 d-flex flex-column align-items-start">
           <div class="form-check d-flex align-items-center mb-2">
             <input
               type="checkbox"
@@ -22,23 +22,10 @@
               Donaciones
             </label>
           </div>
-          <div class="form-check d-flex align-items-center">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="suscripcionesCheck"
-              v-model="filters.includeSuscripciones"
-            />
-            <label class="form-check-label ms-1" for="suscripcionesCheck">
-              Suscripciones
-            </label>
-          </div>
         </div>
-      </div>
 
-      <!-- Fila 2: Date picker/Selector de rango, centrados -->
-      <div class="row justify-content-center mb-3">
-        <div class="col-auto text-center">
+        <!-- Datepicker (selector de rango) a la derecha -->
+        <div class="col-md-6 text-center">
           <!-- Selector de rango -->
           <select
             class="form-select mb-2"
@@ -52,8 +39,7 @@
             <option value="year">Último año</option>
             <option value="custom">Rango de fechas</option>
           </select>
-
-          <!-- Date picker (si se selecciona "custom") -->
+          <!-- Date picker (si se selecciona “custom”) -->
           <div v-if="selectedRange === 'custom'" class="mt-2">
             <div class="input-group">
               <input
@@ -72,9 +58,25 @@
         </div>
       </div>
 
-      <!-- Fila 3: Botones centrados debajo del date picker -->
-      <div class="row justify-content-center mb-4">
-        <div class="col-auto text-center">
+      <!-- FILA 2: Suscripciones (checkbox) + Botones -->
+      <div class="row align-items-center mb-4 g-3">
+        <!-- Suscripciones a la izquierda -->
+        <div class="col-md-6 d-flex flex-column align-items-start">
+          <div class="form-check d-flex align-items-center mb-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="suscripcionesCheck"
+              v-model="filters.includeSuscripciones"
+            />
+            <label class="form-check-label ms-1" for="suscripcionesCheck">
+              Suscripciones
+            </label>
+          </div>
+        </div>
+
+        <!-- Botones a la derecha -->
+        <div class="col-md-6 text-center">
           <button class="btn btn-primary me-2" @click="fetchDashboard">
             Aplicar Filtros
           </button>
@@ -309,7 +311,8 @@ export default {
     fetchDashboard() {
       this.loading = true;
       const url = `https://swgds-jucam-backend.onrender.com/reportes/dashboard?startDate=${this.filters.startDate}&endDate=${this.filters.endDate}&includeDonaciones=${this.filters.includeDonaciones}&includeSuscripciones=${this.filters.includeSuscripciones}`;
-      axios.get(url)
+      axios
+        .get(url)
         .then(response => {
           this.dashboard = response.data;
         })
@@ -341,24 +344,33 @@ export default {
         type: 'doughnut',
         data: {
           labels: ['Donaciones', 'Suscripciones'],
-          datasets: [{
-            data: [
-              this.dashboard.donutChart.donaciones ? this.dashboard.donutChart.donaciones.monto : 0,
-              this.dashboard.donutChart.suscripciones ? this.dashboard.donutChart.suscripciones.monto : 0
-            ],
-            backgroundColor: ['#17C6ED', '#1cc88a']
-          }]
+          datasets: [
+            {
+              data: [
+                this.dashboard.donutChart.donaciones
+                  ? this.dashboard.donutChart.donaciones.monto
+                  : 0,
+                this.dashboard.donutChart.suscripciones
+                  ? this.dashboard.donutChart.suscripciones.monto
+                  : 0
+              ],
+              backgroundColor: ['#17C6ED', '#1cc88a']
+            }
+          ]
         },
         options: {
           plugins: {
             tooltip: {
               callbacks: {
-                label: (context) => {
+                label: context => {
                   const label = context.label || '';
                   const value = context.raw;
-                  const dataItem = this.dashboard.donutChart[label.toLowerCase()];
+                  const dataItem =
+                    this.dashboard.donutChart[label.toLowerCase()];
                   const porcentaje = dataItem ? dataItem.porcentaje : 0;
-                  return `${label}: ${this.formatCurrency(value)} (${porcentaje}%)`;
+                  return `${label}: ${this.formatCurrency(
+                    value
+                  )} (${porcentaje}%)`;
                 }
               }
             }
@@ -383,35 +395,44 @@ export default {
       }
       // Mapeo de service_id a nombre de servicio
       const serviceMapping = {
-        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
-        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
-        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
-        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+        '954d5763-81b2-4b8b-84e2-465c349a2f47': 'Taller de Liderazgo Juvenil',
+        'baf65f58-74b8-49c7-a577-44dc0dcbfc45': 'Taller de Desarrollo Comunitario',
+        '9bebc5fe-f2fd-4919-bcf4-174d88b19a59': 'Programa de Voluntariado',
+        '5e6e2f85-54af-4a86-9b0d-b4c560ca2778': 'Consultoria y Servicios de Apoyo'
       };
       const palette = ['#17C6ED', '#1cc88a'];
-      const labels = this.dashboard.pieChart.map(item => serviceMapping[item.plan] || item.plan);
+      const labels = this.dashboard.pieChart.map(
+        item => serviceMapping[item.plan] || item.plan
+      );
       const dataValues = this.dashboard.pieChart.map(item => item.monto);
-      const backgroundColors = labels.map((_, index) => palette[index % palette.length]);
+      const backgroundColors = labels.map(
+        (_, index) => palette[index % palette.length]
+      );
       this.pieChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
           labels: labels,
-          datasets: [{
-            data: dataValues,
-            backgroundColor: backgroundColors
-          }]
+          datasets: [
+            {
+              data: dataValues,
+              backgroundColor: backgroundColors
+            }
+          ]
         },
         options: {
           plugins: {
             tooltip: {
               callbacks: {
-                label: (context) => {
+                label: context => {
                   const i = context.dataIndex;
                   const originalItem = this.dashboard.pieChart[i];
-                  const serviceName = serviceMapping[originalItem.plan] || originalItem.plan;
+                  const serviceName =
+                    serviceMapping[originalItem.plan] || originalItem.plan;
                   const value = context.raw;
                   const porcentaje = originalItem.porcentaje || 0;
-                  return `${serviceName}: ${this.formatCurrency(value)} (${porcentaje}%)`;
+                  return `${serviceName}: ${this.formatCurrency(
+                    value
+                  )} (${porcentaje}%)`;
                 }
               }
             }
@@ -423,15 +444,15 @@ export default {
     },
     getServiceName(id) {
       const serviceMapping = {
-        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
-        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
-        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
-        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+        '954d5763-81b2-4b8b-84e2-465c349a2f47': 'Taller de Liderazgo Juvenil',
+        'baf65f58-74b8-49c7-a577-44dc0dcbfc45': 'Taller de Desarrollo Comunitario',
+        '9bebc5fe-f2fd-4919-bcf4-174d88b19a59': 'Programa de Voluntariado',
+        '5e6e2f85-54af-4a86-9b0d-b4c560ca2778': 'Consultoria y Servicios de Apoyo'
       };
       return serviceMapping[id] || id;
     },
     formatCurrency(value) {
-      if (typeof value !== "number") {
+      if (typeof value !== 'number') {
         value = parseFloat(value);
       }
       return new Intl.NumberFormat('es-MX', {
