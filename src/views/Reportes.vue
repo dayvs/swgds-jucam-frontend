@@ -39,7 +39,7 @@
         </div>
         <div class="mt-3">
           <button class="btn btn-primary" @click="fetchDashboard">Aplicar Filtros</button>
-          <button class="btn btn-success ms-2" @click="downloadCSV">Descargar reporte</button>
+          <button class="btn btn-primary ms-2" @click="downloadCSV">Descargar reporte</button>
         </div>
       </div>
 
@@ -105,7 +105,7 @@
                   <td>
                     <a href="#" @click.prevent="openSuscriptorModal(item)">{{ item.suscriptor }}</a>
                   </td>
-                  <td>{{ item.plan }}</td>
+                  <td>{{ getServiceName(item.plan) }}</td>
                   <td>{{ formatCurrency(item.monto) }}</td>
                 </tr>
                 <tr>
@@ -269,7 +269,6 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          // Esperar a que el DOM se actualice (v-else ya renderizó)
           this.$nextTick(() => {
             this.renderDonutChart();
             this.renderPieChart();
@@ -341,7 +340,7 @@ export default {
       }
       console.log('Datos para pie chart:', this.dashboard.pieChart);
       
-      // Objeto de mapeo de service_id a nombre de servicio
+      // Mapeo de service_id a nombre de servicio
       const serviceMapping = {
         "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
         "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
@@ -349,10 +348,11 @@ export default {
         "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
       };
       
-      // Mapeamos cada plan (service_id) a su nombre
+      // Mapea cada plan (service_id) a su nombre usando la misma paleta que en el donut chart
+      const palette = ['#17C6ED', '#1cc88a'];
       const labels = this.dashboard.pieChart.map(item => serviceMapping[item.plan] || item.plan);
       const dataValues = this.dashboard.pieChart.map(item => item.monto);
-      const backgroundColors = labels.map(() => this.getRandomColor());
+      const backgroundColors = labels.map((_, index) => palette[index % palette.length]);
       
       this.pieChartInstance = new Chart(ctx, {
         type: 'pie',
@@ -410,9 +410,7 @@ export default {
       axios.get(url, { responseType: 'text' })
         .then(response => {
           let csvData = response.data;
-          // Normalizar texto: eliminar acentos y reemplazar ñ por n
           csvData = this.normalizeText(csvData);
-          // Reemplazar IDs de servicio por nombres
           csvData = this.replaceServiceIds(csvData);
           const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
           const link = document.createElement('a');
@@ -444,6 +442,15 @@ export default {
         text = text.replace(regex, serviceMapping[id]);
       }
       return text;
+    },
+    getServiceName(id) {
+      const serviceMapping = {
+        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
+        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
+        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
+        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+      };
+      return serviceMapping[id] || id;
     },
     openDonadorModal(item) {
       this.modalDonador.data = {
