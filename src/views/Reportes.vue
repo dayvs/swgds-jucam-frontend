@@ -8,71 +8,67 @@
       </div>
 
       <!-- Filtros -->
-      <!-- Fila #1: Checkboxes a la izquierda, datepicker a la derecha -->
-      <div class="row g-3 align-items-center">
-        <!-- Checkboxes (col-md-3 a la izquierda) -->
-        <div class="col-md-3 d-flex flex-column align-items-start">
-          <div class="form-check d-flex align-items-center mb-2">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="donacionesCheck"
-              v-model="filters.includeDonaciones"
-            />
-            <label class="form-check-label ms-1" for="donacionesCheck">
-              Donaciones
-            </label>
-          </div>
-          <div class="form-check d-flex align-items-center">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="suscripcionesCheck"
-              v-model="filters.includeSuscripciones"
-            />
-            <label class="form-check-label ms-1" for="suscripcionesCheck">
-              Suscripciones
-            </label>
-          </div>
-        </div>
-
-        <!-- Col-md-9 a la derecha para el selector de rango y el datepicker -->
-        <div class="col-md-9">
-          <div class="row align-items-center g-2">
-            <!-- Selector de rango -->
-            <div class="col-auto">
-              <select class="form-select" v-model="selectedRange" @change="onRangeChange">
-                <option value="day">Último día</option>
-                <option value="week">Última semana</option>
-                <option value="month">Último mes</option>
-                <option value="year">Último año</option>
-                <option value="custom">Rango de fechas</option>
-              </select>
+      <!-- Fila #1: Checkboxes centrados -->
+      <div class="row justify-content-center mb-3">
+        <div class="col-auto text-center">
+          <div class="d-flex flex-column align-items-center">
+            <div class="form-check d-flex align-items-center mb-2">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="donacionesCheck"
+                v-model="filters.includeDonaciones"
+              />
+              <label class="form-check-label ms-1" for="donacionesCheck">
+                Donaciones
+              </label>
             </div>
-
-            <!-- Date picker (si se selecciona “custom”) -->
-            <div class="col-auto" v-if="selectedRange === 'custom'">
-              <div class="input-group">
-                <input
-                  type="datetime-local"
-                  class="form-control"
-                  v-model="customStartDate"
-                />
-                <span class="input-group-text">a</span>
-                <input
-                  type="datetime-local"
-                  class="form-control"
-                  v-model="customEndDate"
-                />
-              </div>
+            <div class="form-check d-flex align-items-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="suscripcionesCheck"
+                v-model="filters.includeSuscripciones"
+              />
+              <label class="form-check-label ms-1" for="suscripcionesCheck">
+                Suscripciones
+              </label>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Fila #2: Botones debajo, alineados con el selector (col-md-9 offset-md-3) -->
-      <div class="row mt-3">
-        <div class="col-md-9 offset-md-3">
+      <!-- Fila #2: Selector de rango y datepicker, centrados -->
+      <div class="row justify-content-center mb-3">
+        <div class="col-auto text-center">
+          <select class="form-select mb-2" style="min-width: 180px;" v-model="selectedRange" @change="onRangeChange">
+            <option value="day">Último día</option>
+            <option value="week">Última semana</option>
+            <option value="month">Último mes</option>
+            <option value="year">Último año</option>
+            <option value="custom">Rango de fechas</option>
+          </select>
+          <div v-if="selectedRange === 'custom'" class="mt-2">
+            <div class="input-group">
+              <input
+                type="datetime-local"
+                class="form-control"
+                v-model="customStartDate"
+              />
+              <span class="input-group-text">a</span>
+              <input
+                type="datetime-local"
+                class="form-control"
+                v-model="customEndDate"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila #3: Botones, centrados debajo -->
+      <div class="row justify-content-center mb-4">
+        <div class="col-auto text-center">
           <button class="btn btn-primary me-2" @click="fetchDashboard">
             Aplicar Filtros
           </button>
@@ -540,7 +536,6 @@ export default {
   background-color: #17C6ED;
   border-color: #17C6ED;
 }
-
 .form-check-label {
   margin-left: 0.25rem;
   line-height: 1;
@@ -564,7 +559,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .modal-dialog {
   background: #fff;
   border-radius: 5px;
@@ -572,19 +566,14 @@ export default {
   width: 100%;
   max-width: 500px;
 }
-
 .btn-close {
   background: none;
   border: none;
   font-size: 1.5rem;
 }
-
-.modal-header,
-.modal-body,
-.modal-footer {
+.modal-header, .modal-body, .modal-footer {
   border: none;
 }
-
 .modal-title {
   color: #193238;
   font-family: 'Inter', sans-serif;
