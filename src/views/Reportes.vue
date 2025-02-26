@@ -26,7 +26,6 @@
               <label class="form-check-label ms-1" for="donacionesCheck">
                 Donaciones
               </label>
-            </div>
           </div>
           <div class="form-check d-flex align-items-center">
             <input
