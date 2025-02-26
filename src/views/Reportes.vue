@@ -22,7 +22,7 @@
               id="donacionesCheck"
               v-model="filters.includeDonaciones"
             />
-            <label class="form-check-label ms-1" for="donacionesCheck">
+            <label class="form-check-label ms-10" for="donacionesCheck">
               Donaciones
             </label>
             <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
