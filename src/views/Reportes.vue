@@ -172,6 +172,7 @@
 <script>
 import axios from 'axios';
 import Chart from 'chart.js/auto';
+
 export default {
   name: 'Reportes',
   data() {
@@ -277,8 +278,14 @@ export default {
     },
     renderDonutChart() {
       const canvas = document.getElementById('donutChart');
-      if (!canvas) return;
+      console.log('Canvas donutChart:', canvas);
+      if (!canvas) {
+        console.error('Error: Canvas "donutChart" no se encontró en el DOM.');
+        return;
+      }
       const ctx = canvas.getContext('2d');
+      console.log('Contexto donutChart:', ctx);
+      console.log('Datos para donut chart:', this.dashboard.donutChart);
       if (this.donutChartInstance) {
         this.donutChartInstance.destroy();
       }
@@ -312,14 +319,21 @@ export default {
           maintainAspectRatio: false
         }
       });
+      console.log('Donut chart creado:', this.donutChartInstance);
     },
     renderPieChart() {
       const canvas = document.getElementById('pieChart');
-      if (!canvas) return;
+      console.log('Canvas pieChart:', canvas);
+      if (!canvas) {
+        console.error('Error: Canvas "pieChart" no se encontró en el DOM.');
+        return;
+      }
       const ctx = canvas.getContext('2d');
+      console.log('Contexto pieChart:', ctx);
       if (this.pieChartInstance) {
         this.pieChartInstance.destroy();
       }
+      console.log('Datos para pie chart:', this.dashboard.pieChart);
       const labels = this.dashboard.pieChart.map(item => item.plan);
       const dataValues = this.dashboard.pieChart.map(item => item.monto);
       const backgroundColors = labels.map(() => this.getRandomColor());
@@ -350,6 +364,7 @@ export default {
           maintainAspectRatio: false
         }
       });
+      console.log('Pie chart creado:', this.pieChartInstance);
     },
     getRandomColor() {
       return '#' + Math.floor(Math.random() * 16777215).toString(16);
@@ -385,7 +400,7 @@ export default {
           const link = document.createElement('a');
           const urlBlob = URL.createObjectURL(blob);
           link.setAttribute('href', urlBlob);
-          const timestamp = new Date().toISOString().slice(0,19).replace(/[-T:]/g, '');
+          const timestamp = new Date().toISOString().slice(0, 19).replace(/[-T:]/g, '');
           link.setAttribute('download', `Reporte_${timestamp}_Jucam.csv`);
           link.style.visibility = 'hidden';
           document.body.appendChild(link);
@@ -474,7 +489,7 @@ export default {
   border: none;
 }
 
-/* Modales para Donador y Suscriptor (igual a los modales de empleados) */
+/* Modales para Donador y Suscriptor */
 .modal {
   position: fixed;
   top: 0;
