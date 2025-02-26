@@ -74,7 +74,7 @@
 
       <!-- Fila 3: Botones centrados debajo del date picker -->
       <div class="row g-3 align-items-center mb-3">
-        <div class="col-md-3 d-flex flex-column align-items-start">
+        <div class="col-auto text-center">
           <button class="btn btn-primary me-2" @click="fetchDashboard">
             Aplicar Filtros
           </button>
