@@ -340,9 +340,20 @@ export default {
         this.pieChartInstance.destroy();
       }
       console.log('Datos para pie chart:', this.dashboard.pieChart);
-      const labels = this.dashboard.pieChart.map(item => item.plan);
+      
+      // Objeto de mapeo de service_id a nombre de servicio
+      const serviceMapping = {
+        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
+        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
+        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
+        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+      };
+      
+      // Mapeamos cada plan (service_id) a su nombre
+      const labels = this.dashboard.pieChart.map(item => serviceMapping[item.plan] || item.plan);
       const dataValues = this.dashboard.pieChart.map(item => item.monto);
       const backgroundColors = labels.map(() => this.getRandomColor());
+      
       this.pieChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
@@ -357,11 +368,12 @@ export default {
             tooltip: {
               callbacks: {
                 label: (context) => {
-                  const label = context.label || '';
+                  const index = context.dataIndex;
+                  const originalItem = this.dashboard.pieChart[index];
+                  const serviceName = serviceMapping[originalItem.plan] || originalItem.plan;
                   const value = context.raw;
-                  const item = this.dashboard.pieChart.find(i => i.plan === label);
-                  const porcentaje = item ? item.porcentaje : 0;
-                  return `${label}: ${this.formatCurrency(value)} (${porcentaje}%)`;
+                  const porcentaje = originalItem.porcentaje || 0;
+                  return `${serviceName}: ${this.formatCurrency(value)} (${porcentaje}%)`;
                 }
               }
             }
