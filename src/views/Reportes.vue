@@ -8,46 +8,52 @@
       </div>
 
       <!-- Filtros -->
-      <!-- Fila #1: Checkboxes centrados -->
-      <div class="row justify-content-center mb-3">
-        <div class="col-auto text-center">
-          <div class="d-flex flex-column align-items-center">
-            <div class="form-check d-flex align-items-center mb-2">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="donacionesCheck"
-                v-model="filters.includeDonaciones"
-              />
-              <label class="form-check-label ms-1" for="donacionesCheck">
-                Donaciones
-              </label>
-            </div>
-            <div class="form-check d-flex align-items-center">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                id="suscripcionesCheck"
-                v-model="filters.includeSuscripciones"
-              />
-              <label class="form-check-label ms-1" for="suscripcionesCheck">
-                Suscripciones
-              </label>
-            </div>
+      <!-- Fila 1: Checkboxes a la izquierda (sin tocarlos) -->
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-md-3 d-flex flex-column align-items-start">
+          <div class="form-check d-flex align-items-center mb-2">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="donacionesCheck"
+              v-model="filters.includeDonaciones"
+            />
+            <label class="form-check-label ms-1" for="donacionesCheck">
+              Donaciones
+            </label>
+          </div>
+          <div class="form-check d-flex align-items-center">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="suscripcionesCheck"
+              v-model="filters.includeSuscripciones"
+            />
+            <label class="form-check-label ms-1" for="suscripcionesCheck">
+              Suscripciones
+            </label>
           </div>
         </div>
       </div>
 
-      <!-- Fila #2: Selector de rango y datepicker, centrados -->
+      <!-- Fila 2: Date picker/Selector de rango, centrados -->
       <div class="row justify-content-center mb-3">
         <div class="col-auto text-center">
-          <select class="form-select mb-2" style="min-width: 180px;" v-model="selectedRange" @change="onRangeChange">
+          <!-- Selector de rango -->
+          <select
+            class="form-select mb-2"
+            style="min-width: 180px;"
+            v-model="selectedRange"
+            @change="onRangeChange"
+          >
             <option value="day">Último día</option>
             <option value="week">Última semana</option>
             <option value="month">Último mes</option>
             <option value="year">Último año</option>
             <option value="custom">Rango de fechas</option>
           </select>
+
+          <!-- Date picker (si se selecciona "custom") -->
           <div v-if="selectedRange === 'custom'" class="mt-2">
             <div class="input-group">
               <input
@@ -66,7 +72,7 @@
         </div>
       </div>
 
-      <!-- Fila #3: Botones, centrados debajo -->
+      <!-- Fila 3: Botones centrados debajo del date picker -->
       <div class="row justify-content-center mb-4">
         <div class="col-auto text-center">
           <button class="btn btn-primary me-2" @click="fetchDashboard">
@@ -137,10 +143,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in dashboard.tablaSuscripciones" :key="item.fecha + item.suscriptor">
+                <tr
+                  v-for="item in dashboard.tablaSuscripciones"
+                  :key="item.fecha + item.suscriptor"
+                >
                   <td>{{ item.fecha }}</td>
                   <td>
-                    <a href="#" @click.prevent="openSuscriptorModal(item)">{{ item.suscriptor }}</a>
+                    <a href="#" @click.prevent="openSuscriptorModal(item)"
+                      >{{ item.suscriptor }}</a
+                    >
                   </td>
                   <td>{{ getServiceName(item.plan) }}</td>
                   <td>{{ formatCurrency(item.monto) }}</td>
@@ -424,15 +435,16 @@ export default {
         value = parseFloat(value);
       }
       return new Intl.NumberFormat('es-MX', {
-        style: 'currency', 
+        style: 'currency',
         currency: 'MXN',
         minimumFractionDigits: 2,
-        maximumFractionDigits: 2 
+        maximumFractionDigits: 2
       }).format(value);
     },
     downloadCSV() {
       const url = `https://swgds-jucam-backend.onrender.com/reportes/csv?startDate=${this.filters.startDate}&endDate=${this.filters.endDate}&includeDonaciones=${this.filters.includeDonaciones}&includeSuscripciones=${this.filters.includeSuscripciones}`;
-      axios.get(url, { responseType: 'text' })
+      axios
+        .get(url, { responseType: 'text' })
         .then(response => {
           let csvData = response.data;
           csvData = this.normalizeText(csvData);
@@ -453,14 +465,18 @@ export default {
         });
     },
     normalizeText(text) {
-      return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ñ/g, 'n').replace(/Ñ/g, 'N');
+      return text
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/ñ/g, 'n')
+        .replace(/Ñ/g, 'N');
     },
     replaceServiceIds(text) {
       const serviceMapping = {
-        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
-        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
-        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
-        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+        '954d5763-81b2-4b8b-84e2-465c349a2f47': 'Taller de Liderazgo Juvenil',
+        'baf65f58-74b8-49c7-a577-44dc0dcbfc45': 'Taller de Desarrollo Comunitario',
+        '9bebc5fe-f2fd-4919-bcf4-174d88b19a59': 'Programa de Voluntariado',
+        '5e6e2f85-54af-4a86-9b0d-b4c560ca2778': 'Consultoria y Servicios de Apoyo'
       };
       for (const id in serviceMapping) {
         const regex = new RegExp(id, 'g');
@@ -536,6 +552,7 @@ export default {
   background-color: #17C6ED;
   border-color: #17C6ED;
 }
+
 .form-check-label {
   margin-left: 0.25rem;
   line-height: 1;
@@ -571,7 +588,9 @@ export default {
   border: none;
   font-size: 1.5rem;
 }
-.modal-header, .modal-body, .modal-footer {
+.modal-header,
+.modal-body,
+.modal-footer {
   border: none;
 }
 .modal-title {
