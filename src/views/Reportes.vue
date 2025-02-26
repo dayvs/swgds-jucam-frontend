@@ -26,7 +26,7 @@
               Donaciones
             </label>
 
-            <button class="btn btn-secondary row d-flex justify-content-between align-items-end mb-4" @click="logout">Cerrar sesión</button>            
+            <button class="btn btn-secondary align-items-end mb-4" @click="logout">Cerrar sesión</button>            
             
           </div>
           <div class="form-check d-flex align-items-center">
