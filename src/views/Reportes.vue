@@ -7,10 +7,11 @@
         <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
       </div>
 
-      <!-- Filtros -->
-      <!-- Fila 1: Checkboxes a la izquierda (sin tocarlos) -->
-      <div class="row g-3 align-items-center mb-3">
+      <!-- FILA PRINCIPAL: Checkboxes a la izquierda, datepicker + botones a la derecha -->
+      <div class="row align-items-start mb-4 g-3">
+        <!-- COLUMNA IZQUIERDA: Checkboxes (Donaciones y Suscripciones) -->
         <div class="col-md-3 d-flex flex-column align-items-start">
+          <!-- Donaciones -->
           <div class="form-check d-flex align-items-center mb-2">
             <input
               type="checkbox"
@@ -22,7 +23,8 @@
               Donaciones
             </label>
           </div>
-          <div class="form-check d-flex align-items-center">
+          <!-- Suscripciones -->
+          <div class="form-check d-flex align-items-center mb-2">
             <input
               type="checkbox"
               class="form-check-input"
@@ -34,53 +36,50 @@
             </label>
           </div>
         </div>
-      </div>
 
-      <!-- Fila 2: Date picker/Selector de rango, centrados -->
-      <div class="row justify-content-center mb-3">
-        <div class="col-auto text-center">
+        <!-- COLUMNA DERECHA: datepicker (arriba) y botones (abajo) -->
+        <div class="col-md-9">
           <!-- Selector de rango -->
-          <select
-            class="form-select mb-2"
-            style="min-width: 180px;"
-            v-model="selectedRange"
-            @change="onRangeChange"
-          >
-            <option value="day">Último día</option>
-            <option value="week">Última semana</option>
-            <option value="month">Último mes</option>
-            <option value="year">Último año</option>
-            <option value="custom">Rango de fechas</option>
-          </select>
-
-          <!-- Date picker (si se selecciona "custom") -->
-          <div v-if="selectedRange === 'custom'" class="mt-2">
-            <div class="input-group">
-              <input
-                type="datetime-local"
-                class="form-control"
-                v-model="customStartDate"
-              />
-              <span class="input-group-text">a</span>
-              <input
-                type="datetime-local"
-                class="form-control"
-                v-model="customEndDate"
-              />
+          <div class="mb-3">
+            <select
+              class="form-select"
+              style="min-width: 180px;"
+              v-model="selectedRange"
+              @change="onRangeChange"
+            >
+              <option value="day">Último día</option>
+              <option value="week">Última semana</option>
+              <option value="month">Último mes</option>
+              <option value="year">Último año</option>
+              <option value="custom">Rango de fechas</option>
+            </select>
+            <!-- Datepicker si es custom -->
+            <div v-if="selectedRange === 'custom'" class="mt-2">
+              <div class="input-group">
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  v-model="customStartDate"
+                />
+                <span class="input-group-text">a</span>
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  v-model="customEndDate"
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- Fila 3: Botones centrados debajo del date picker -->
-      <div class="row justify-content-center mb-4">
-        <div class="col-auto text-center">
-          <button class="btn btn-primary me-2" @click="fetchDashboard">
-            Aplicar Filtros
-          </button>
-          <button class="btn btn-primary" @click="downloadCSV">
-            Descargar reporte
-          </button>
+          <!-- Botones debajo del datepicker -->
+          <div>
+            <button class="btn btn-primary me-2" @click="fetchDashboard">
+              Aplicar Filtros
+            </button>
+            <button class="btn btn-primary" @click="downloadCSV">
+              Descargar reporte
+            </button>
+          </div>
         </div>
       </div>
 
@@ -120,7 +119,9 @@
                 <tr v-for="item in dashboard.tablaDonaciones" :key="item.fecha">
                   <td>{{ item.fecha }}</td>
                   <td>
-                    <a href="#" @click.prevent="openDonadorModal(item)">{{ item.donador }}</a>
+                    <a href="#" @click.prevent="openDonadorModal(item)"
+                      >{{ item.donador }}</a
+                    >
                   </td>
                   <td>{{ formatCurrency(item.monto) }}</td>
                 </tr>
@@ -309,7 +310,8 @@ export default {
     fetchDashboard() {
       this.loading = true;
       const url = `https://swgds-jucam-backend.onrender.com/reportes/dashboard?startDate=${this.filters.startDate}&endDate=${this.filters.endDate}&includeDonaciones=${this.filters.includeDonaciones}&includeSuscripciones=${this.filters.includeSuscripciones}`;
-      axios.get(url)
+      axios
+        .get(url)
         .then(response => {
           this.dashboard = response.data;
         })
@@ -341,24 +343,33 @@ export default {
         type: 'doughnut',
         data: {
           labels: ['Donaciones', 'Suscripciones'],
-          datasets: [{
-            data: [
-              this.dashboard.donutChart.donaciones ? this.dashboard.donutChart.donaciones.monto : 0,
-              this.dashboard.donutChart.suscripciones ? this.dashboard.donutChart.suscripciones.monto : 0
-            ],
-            backgroundColor: ['#17C6ED', '#1cc88a']
-          }]
+          datasets: [
+            {
+              data: [
+                this.dashboard.donutChart.donaciones
+                  ? this.dashboard.donutChart.donaciones.monto
+                  : 0,
+                this.dashboard.donutChart.suscripciones
+                  ? this.dashboard.donutChart.suscripciones.monto
+                  : 0
+              ],
+              backgroundColor: ['#17C6ED', '#1cc88a']
+            }
+          ]
         },
         options: {
           plugins: {
             tooltip: {
               callbacks: {
-                label: (context) => {
+                label: context => {
                   const label = context.label || '';
                   const value = context.raw;
-                  const dataItem = this.dashboard.donutChart[label.toLowerCase()];
+                  const dataItem =
+                    this.dashboard.donutChart[label.toLowerCase()];
                   const porcentaje = dataItem ? dataItem.porcentaje : 0;
-                  return `${label}: ${this.formatCurrency(value)} (${porcentaje}%)`;
+                  return `${label}: ${this.formatCurrency(
+                    value
+                  )} (${porcentaje}%)`;
                 }
               }
             }
@@ -383,35 +394,44 @@ export default {
       }
       // Mapeo de service_id a nombre de servicio
       const serviceMapping = {
-        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
-        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
-        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
-        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+        '954d5763-81b2-4b8b-84e2-465c349a2f47': 'Taller de Liderazgo Juvenil',
+        'baf65f58-74b8-49c7-a577-44dc0dcbfc45': 'Taller de Desarrollo Comunitario',
+        '9bebc5fe-f2fd-4919-bcf4-174d88b19a59': 'Programa de Voluntariado',
+        '5e6e2f85-54af-4a86-9b0d-b4c560ca2778': 'Consultoria y Servicios de Apoyo'
       };
       const palette = ['#17C6ED', '#1cc88a'];
-      const labels = this.dashboard.pieChart.map(item => serviceMapping[item.plan] || item.plan);
+      const labels = this.dashboard.pieChart.map(
+        item => serviceMapping[item.plan] || item.plan
+      );
       const dataValues = this.dashboard.pieChart.map(item => item.monto);
-      const backgroundColors = labels.map((_, index) => palette[index % palette.length]);
+      const backgroundColors = labels.map(
+        (_, index) => palette[index % palette.length]
+      );
       this.pieChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
           labels: labels,
-          datasets: [{
-            data: dataValues,
-            backgroundColor: backgroundColors
-          }]
+          datasets: [
+            {
+              data: dataValues,
+              backgroundColor: backgroundColors
+            }
+          ]
         },
         options: {
           plugins: {
             tooltip: {
               callbacks: {
-                label: (context) => {
+                label: context => {
                   const i = context.dataIndex;
                   const originalItem = this.dashboard.pieChart[i];
-                  const serviceName = serviceMapping[originalItem.plan] || originalItem.plan;
+                  const serviceName =
+                    serviceMapping[originalItem.plan] || originalItem.plan;
                   const value = context.raw;
                   const porcentaje = originalItem.porcentaje || 0;
-                  return `${serviceName}: ${this.formatCurrency(value)} (${porcentaje}%)`;
+                  return `${serviceName}: ${this.formatCurrency(
+                    value
+                  )} (${porcentaje}%)`;
                 }
               }
             }
@@ -423,15 +443,15 @@ export default {
     },
     getServiceName(id) {
       const serviceMapping = {
-        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
-        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
-        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
-        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+        '954d5763-81b2-4b8b-84e2-465c349a2f47': 'Taller de Liderazgo Juvenil',
+        'baf65f58-74b8-49c7-a577-44dc0dcbfc45': 'Taller de Desarrollo Comunitario',
+        '9bebc5fe-f2fd-4919-bcf4-174d88b19a59': 'Programa de Voluntariado',
+        '5e6e2f85-54af-4a86-9b0d-b4c560ca2778': 'Consultoria y Servicios de Apoyo'
       };
       return serviceMapping[id] || id;
     },
     formatCurrency(value) {
-      if (typeof value !== "number") {
+      if (typeof value !== 'number') {
         value = parseFloat(value);
       }
       return new Intl.NumberFormat('es-MX', {
