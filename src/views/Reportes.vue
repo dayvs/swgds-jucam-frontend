@@ -8,69 +8,74 @@
       </div>
 
       <!-- Filtros -->
-      <div class="row justify-content-center align-items-center mb-4 g-3">
-        <!-- Checkboxes -->
-        <div class="col-auto d-flex flex-column align-items-start">
-          <div class="form-check d-flex align-items-center mb-2">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="donacionesCheck"
-              v-model="filters.includeDonaciones"
-            />
-            <label class="form-check-label ms-1" for="donacionesCheck">
-              Donaciones
-            </label>
+      <div class="filters mb-4">
+        <!-- Fila para checkboxes y datepicker -->
+        <div class="row align-items-center g-3">
+          <!-- Checkboxes (no los movemos, tal cual los tenías) -->
+          <div class="col-md-3 d-flex flex-column align-items-start">
+            <div class="form-check d-flex align-items-center mb-2">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="donacionesCheck"
+                v-model="filters.includeDonaciones"
+              />
+              <label class="form-check-label ms-1" for="donacionesCheck">
+                Donaciones
+              </label>
+            </div>
+            <div class="form-check d-flex align-items-center">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="suscripcionesCheck"
+                v-model="filters.includeSuscripciones"
+              />
+              <label class="form-check-label ms-1" for="suscripcionesCheck">
+                Suscripciones
+              </label>
+            </div>
           </div>
-          <div class="form-check d-flex align-items-center">
-            <input
-              type="checkbox"
-              class="form-check-input"
-              id="suscripcionesCheck"
-              v-model="filters.includeSuscripciones"
-            />
-            <label class="form-check-label ms-1" for="suscripcionesCheck">
-              Suscripciones
-            </label>
+
+          <!-- Selector de rango (Último día, semana, mes, etc.) -->
+          <div class="col-md-3">
+            <select class="form-select" v-model="selectedRange" @change="onRangeChange">
+              <option value="day">Último día</option>
+              <option value="week">Última semana</option>
+              <option value="month">Último mes</option>
+              <option value="year">Último año</option>
+              <option value="custom">Rango de fechas</option>
+            </select>
+          </div>
+
+          <!-- Date picker (si se selecciona "custom") -->
+          <div class="col-md-4" v-if="selectedRange === 'custom'">
+            <div class="input-group">
+              <input
+                type="datetime-local"
+                class="form-control"
+                v-model="customStartDate"
+              />
+              <span class="input-group-text">a</span>
+              <input
+                type="datetime-local"
+                class="form-control"
+                v-model="customEndDate"
+              />
+            </div>
           </div>
         </div>
 
-        <!-- Selector de rango (Último día, semana, mes, etc.) -->
-        <div class="col-auto">
-          <select class="form-select" v-model="selectedRange" @change="onRangeChange">
-            <option value="day">Último día</option>
-            <option value="week">Última semana</option>
-            <option value="month">Último mes</option>
-            <option value="year">Último año</option>
-            <option value="custom">Rango de fechas</option>
-          </select>
-        </div>
-
-        <!-- Date picker (si se selecciona "custom") -->
-        <div class="col-auto" v-if="selectedRange === 'custom'">
-          <div class="input-group">
-            <input
-              type="datetime-local"
-              class="form-control"
-              v-model="customStartDate"
-            />
-            <span class="input-group-text">a</span>
-            <input
-              type="datetime-local"
-              class="form-control"
-              v-model="customEndDate"
-            />
+        <!-- Fila para los botones -->
+        <div class="row mt-3">
+          <div class="col-auto">
+            <button class="btn btn-primary me-2" @click="fetchDashboard">
+              Aplicar Filtros
+            </button>
+            <button class="btn btn-primary" @click="downloadCSV">
+              Descargar reporte
+            </button>
           </div>
-        </div>
-
-        <!-- Botones -->
-        <div class="col-auto d-flex mt-3 mt-md-0">
-          <button class="btn btn-primary me-2" @click="fetchDashboard">
-            Aplicar Filtros
-          </button>
-          <button class="btn btn-primary" @click="downloadCSV">
-            Descargar reporte
-          </button>
         </div>
       </div>
 
@@ -88,10 +93,12 @@
           <h3>TOTAL RECAUDADO</h3>
           <h2>{{ formatCurrency(dashboard.totalRecaudado) }}</h2>
         </div>
+
         <!-- Donut Chart principal -->
         <div class="chart-container mb-5">
           <canvas id="donutChart" ref="donutChart"></canvas>
         </div>
+
         <!-- Tablas de Donaciones y Suscripciones -->
         <div class="row">
           <div class="col-md-6">
@@ -147,6 +154,7 @@
             </table>
           </div>
         </div>
+
         <!-- Pie Chart de Suscripciones -->
         <div class="text-center mt-5">
           <h4>Suscripciones</h4>
@@ -311,14 +319,11 @@ export default {
       if (Array.isArray(canvas)) {
         canvas = canvas[0];
       }
-      console.log('Canvas donutChart:', canvas);
       if (!canvas) {
         console.error('Error: Canvas "donutChart" no se encontró en el DOM.');
         return;
       }
       const ctx = canvas.getContext('2d');
-      console.log('Contexto donutChart:', ctx);
-      console.log('Datos para donut chart:', this.dashboard.donutChart);
       if (this.donutChartInstance) {
         this.donutChartInstance.destroy();
       }
@@ -352,25 +357,20 @@ export default {
           maintainAspectRatio: false
         }
       });
-      console.log('Donut chart creado:', this.donutChartInstance);
     },
     renderPieChart() {
       let canvas = this.$refs.pieChart;
       if (Array.isArray(canvas)) {
         canvas = canvas[0];
       }
-      console.log('Canvas pieChart:', canvas);
       if (!canvas) {
         console.error('Error: Canvas "pieChart" no se encontró en el DOM.');
         return;
       }
       const ctx = canvas.getContext('2d');
-      console.log('Contexto pieChart:', ctx);
       if (this.pieChartInstance) {
         this.pieChartInstance.destroy();
       }
-      console.log('Datos para pie chart:', this.dashboard.pieChart);
-
       // Mapeo de service_id a nombre de servicio
       const serviceMapping = {
         "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
@@ -378,13 +378,10 @@ export default {
         "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
         "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
       };
-
-      // Mapa cada plan (service_id) a su nombre usando la misma paleta que en el donut chart
       const palette = ['#17C6ED', '#1cc88a'];
       const labels = this.dashboard.pieChart.map(item => serviceMapping[item.plan] || item.plan);
       const dataValues = this.dashboard.pieChart.map(item => item.monto);
       const backgroundColors = labels.map((_, index) => palette[index % palette.length]);
-
       this.pieChartInstance = new Chart(ctx, {
         type: 'pie',
         data: {
@@ -413,7 +410,6 @@ export default {
           maintainAspectRatio: false
         }
       });
-      console.log('Pie chart creado:', this.pieChartInstance);
     },
     getServiceName(id) {
       const serviceMapping = {
@@ -423,13 +419,6 @@ export default {
         "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
       };
       return serviceMapping[id] || id;
-    },
-    formatDate(dateStr) {
-      const options = { 
-        year: 'numeric', month: 'short', day: 'numeric', 
-        hour: '2-digit', minute: '2-digit'
-      };
-      return new Date(dateStr).toLocaleDateString('es-ES', options);
     },
     formatCurrency(value) {
       if (typeof value !== "number") {
@@ -517,10 +506,12 @@ export default {
   font-weight: 700;
   margin-bottom: 20px;
 }
+
 .chart-container {
   position: relative;
   height: 300px;
 }
+
 /* Estilos de tablas y botones se adaptan a la paleta general */
 .table {
   background-color: #fff;
@@ -578,7 +569,9 @@ export default {
   border: none;
   font-size: 1.5rem;
 }
-.modal-header, .modal-body, .modal-footer {
+.modal-header,
+.modal-body,
+.modal-footer {
   border: none;
 }
 .modal-title {
