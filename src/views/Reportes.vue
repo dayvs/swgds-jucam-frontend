@@ -546,4 +546,17 @@ export default {
   font-family: 'Inter', sans-serif;
   font-weight: 700;
 }
+
+/* Personalizar checkboxes cuando están chequeados */
+.form-check-input:checked {
+  background-color: #17C6ED;
+  border-color: #17C6ED;
+}
+
+/* Reducir el margen entre checkbox y texto */
+.form-check-label {
+  margin-left: 0.25rem;
+  line-height: 1;
+}
+
 </style>
