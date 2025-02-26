@@ -2,12 +2,11 @@
   <div class="reportes-page" style="background-color: #F6F8F9;">
     <div class="container py-5">
       <!-- Encabezado con título -->
-      <div class="text-center mb-4">
-        <h2 class="title">Reportes de Donaciones</h2>
-        <div class="col-md-3 d-flex flex-column align-items-end"> 
-          <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
-        </div>       
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="title m-0">Reportes de Donaciones</h2>
+        <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
       </div>
+
 
       <!-- botón de cerrar sesión 
       <div class="row d-flex justify-content-between align-items-end mb-4">       
