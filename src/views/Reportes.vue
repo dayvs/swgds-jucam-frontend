@@ -7,7 +7,7 @@
       </div>
 
       <!-- botón de cerrar sesión -->
-      <div class="header d-flex justify-content-between align-items-center mb-4">       
+      <div class="header d-flex justify-content-between align-items-end mb-4">       
         <button class="btn btn-secondary" @click="logout">Cerrar sesión</button>
       </div>
 
