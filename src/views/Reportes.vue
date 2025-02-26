@@ -8,10 +8,9 @@
       </div>
 
       <!-- Filtros -->
-      <!-- Usamos row align-items-center para alinear checkboxes, select y botones en una sola fila -->
-      <div class="row align-items-center mb-4">
+      <div class="row justify-content-center align-items-center mb-4 g-3">
         <!-- Checkboxes -->
-        <div class="col-md-3 d-flex flex-column align-items-start">
+        <div class="col-auto d-flex flex-column align-items-start">
           <div class="form-check d-flex align-items-center mb-2">
             <input
               type="checkbox"
@@ -19,7 +18,9 @@
               id="donacionesCheck"
               v-model="filters.includeDonaciones"
             />
-            <label class="form-check-label ms-1" for="donacionesCheck">Donaciones</label>
+            <label class="form-check-label ms-1" for="donacionesCheck">
+              Donaciones
+            </label>
           </div>
           <div class="form-check d-flex align-items-center">
             <input
@@ -28,12 +29,14 @@
               id="suscripcionesCheck"
               v-model="filters.includeSuscripciones"
             />
-            <label class="form-check-label ms-1" for="suscripcionesCheck">Suscripciones</label>
+            <label class="form-check-label ms-1" for="suscripcionesCheck">
+              Suscripciones
+            </label>
           </div>
         </div>
 
         <!-- Selector de rango (Último día, semana, mes, etc.) -->
-        <div class="col-md-3">
+        <div class="col-auto">
           <select class="form-select" v-model="selectedRange" @change="onRangeChange">
             <option value="day">Último día</option>
             <option value="week">Última semana</option>
@@ -44,7 +47,7 @@
         </div>
 
         <!-- Date picker (si se selecciona "custom") -->
-        <div class="col-md-4" v-if="selectedRange === 'custom'">
+        <div class="col-auto" v-if="selectedRange === 'custom'">
           <div class="input-group">
             <input
               type="datetime-local"
@@ -61,9 +64,13 @@
         </div>
 
         <!-- Botones -->
-        <div class="col-md-2 text-end mt-3 mt-md-0">
-          <button class="btn btn-primary" @click="fetchDashboard">Aplicar Filtros</button>
-          <button class="btn btn-primary ms-2" @click="downloadCSV">Descargar reporte</button>
+        <div class="col-auto d-flex mt-3 mt-md-0">
+          <button class="btn btn-primary me-2" @click="fetchDashboard">
+            Aplicar Filtros
+          </button>
+          <button class="btn btn-primary" @click="downloadCSV">
+            Descargar reporte
+          </button>
         </div>
       </div>
 
