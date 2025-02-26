@@ -172,7 +172,6 @@
 <script>
 import axios from 'axios';
 import Chart from 'chart.js/auto';
-
 export default {
   name: 'Reportes',
   data() {
@@ -224,7 +223,6 @@ export default {
   },
   methods: {
     setDefaultDates() {
-      // Por defecto se usa el mes actual: desde el primer día hasta el momento actual
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
       this.filters.startDate = start.toISOString().slice(0, 19);
@@ -237,10 +235,10 @@ export default {
         start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0);
         end = now;
       } else if (this.selectedRange === 'week') {
-        // Se asume que la semana inicia el lunes
         const day = now.getDay();
         const diff = now.getDate() - day + (day === 0 ? -6 : 1);
-        start = new Date(now.setDate(diff));
+        start = new Date(now);
+        start.setDate(diff);
         start.setHours(0, 0, 0, 0);
         end = new Date();
       } else if (this.selectedRange === 'month') {
@@ -265,8 +263,10 @@ export default {
       axios.get(url)
         .then(response => {
           this.dashboard = response.data;
-          this.renderDonutChart();
-          this.renderPieChart();
+          this.$nextTick(() => {
+            this.renderDonutChart();
+            this.renderPieChart();
+          });
         })
         .catch(error => {
           console.error('Error fetching dashboard data:', error);
@@ -276,7 +276,9 @@ export default {
         });
     },
     renderDonutChart() {
-      const ctx = document.getElementById('donutChart').getContext('2d');
+      const canvas = document.getElementById('donutChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
       if (this.donutChartInstance) {
         this.donutChartInstance.destroy();
       }
@@ -289,7 +291,7 @@ export default {
               this.dashboard.donutChart.donaciones ? this.dashboard.donutChart.donaciones.monto : 0,
               this.dashboard.donutChart.suscripciones ? this.dashboard.donutChart.suscripciones.monto : 0
             ],
-            backgroundColor: ['#4e73df', '#1cc88a']
+            backgroundColor: ['#17C6ED', '#1cc88a']
           }]
         },
         options: {
@@ -299,9 +301,8 @@ export default {
                 label: (context) => {
                   const label = context.label || '';
                   const value = context.raw;
-                  const porcentaje = this.dashboard.donutChart[label.toLowerCase()] 
-                    ? this.dashboard.donutChart[label.toLowerCase()].porcentaje 
-                    : 0;
+                  const dataItem = this.dashboard.donutChart[label.toLowerCase()];
+                  const porcentaje = dataItem ? dataItem.porcentaje : 0;
                   return `${label}: ${this.formatCurrency(value)} (${porcentaje}%)`;
                 }
               }
@@ -313,7 +314,9 @@ export default {
       });
     },
     renderPieChart() {
-      const ctx = document.getElementById('pieChart').getContext('2d');
+      const canvas = document.getElementById('pieChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
       if (this.pieChartInstance) {
         this.pieChartInstance.destroy();
       }
@@ -371,13 +374,49 @@ export default {
     },
     downloadCSV() {
       const url = `https://swgds-jucam-backend.onrender.com/reportes/csv?startDate=${this.filters.startDate}&endDate=${this.filters.endDate}&includeDonaciones=${this.filters.includeDonaciones}&includeSuscripciones=${this.filters.includeSuscripciones}`;
-      window.open(url, '_blank');
+      axios.get(url, { responseType: 'text' })
+        .then(response => {
+          let csvData = response.data;
+          // Normalizar texto: eliminar acentos y reemplazar ñ por n
+          csvData = this.normalizeText(csvData);
+          // Reemplazar IDs de servicio por nombres
+          csvData = this.replaceServiceIds(csvData);
+          const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+          const link = document.createElement('a');
+          const urlBlob = URL.createObjectURL(blob);
+          link.setAttribute('href', urlBlob);
+          const timestamp = new Date().toISOString().slice(0,19).replace(/[-T:]/g, '');
+          link.setAttribute('download', `Reporte_${timestamp}_Jucam.csv`);
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+        .catch(error => {
+          console.error('Error downloading CSV:', error);
+        });
+    },
+    normalizeText(text) {
+      return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ñ/g, 'n').replace(/Ñ/g, 'N');
+    },
+    replaceServiceIds(text) {
+      const serviceMapping = {
+        "954d5763-81b2-4b8b-84e2-465c349a2f47": "Taller de Liderazgo Juvenil",
+        "baf65f58-74b8-49c7-a577-44dc0dcbfc45": "Taller de Desarrollo Comunitario",
+        "9bebc5fe-f2fd-4919-bcf4-174d88b19a59": "Programa de Voluntariado",
+        "5e6e2f85-54af-4a86-9b0d-b4c560ca2778": "Consultoria y Servicios de Apoyo"
+      };
+      for (const id in serviceMapping) {
+        const regex = new RegExp(id, 'g');
+        text = text.replace(regex, serviceMapping[id]);
+      }
+      return text;
     },
     openDonadorModal(item) {
       this.modalDonador.data = {
         nombre: item.donador,
         correo: item.correo,
-        telefono: '' // Puedes ampliar si cuentas con más datos
+        telefono: item.telefono || ''
       };
       this.modalDonador.visible = true;
     },
@@ -388,7 +427,7 @@ export default {
       this.modalSuscriptor.data = {
         nombre: item.suscriptor,
         correo: item.correo,
-        telefono: '' // Puedes ampliar si cuentas con más datos
+        telefono: item.telefono || ''
       };
       this.modalSuscriptor.visible = true;
     },
@@ -396,7 +435,7 @@ export default {
       this.modalSuscriptor.visible = false;
     },
     logout() {
-      // Aquí puedes implementar la lógica para cerrar sesión y redireccionar
+      localStorage.removeItem('user');
       window.location.href = '/login';
     }
   }
@@ -414,6 +453,28 @@ export default {
   position: relative;
   height: 300px;
 }
+/* Estilos de tablas y botones se adaptan a la paleta general */
+.table {
+  background-color: #fff;
+}
+.btn {
+  font-family: 'Inter', sans-serif;
+}
+.btn-primary {
+  background-color: #17C6ED;
+  border: none;
+}
+.btn-secondary {
+  background-color: #EBEDED;
+  color: #193238;
+  border: none;
+}
+.btn-success {
+  background-color: #28a745;
+  border: none;
+}
+
+/* Modales para Donador y Suscriptor (igual a los modales de empleados) */
 .modal {
   position: fixed;
   top: 0;
@@ -429,10 +490,20 @@ export default {
   background: #fff;
   border-radius: 5px;
   padding: 20px;
+  width: 100%;
+  max-width: 500px;
 }
 .btn-close {
   background: none;
   border: none;
   font-size: 1.5rem;
+}
+.modal-header, .modal-body, .modal-footer {
+  border: none;
+}
+.modal-title {
+  color: #193238;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
 }
 </style>
