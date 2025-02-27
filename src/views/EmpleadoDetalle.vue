@@ -96,6 +96,7 @@
           </div>
           <div class="modal-body">
             <h5 class="modal-title">¿Reestablecer contraseña?</h5>
+            <p></p>
             <div class="d-flex justify-content-center">
               <button type="button" class="btn btn-secondary me-2" @click="cancelarReset">Cancelar</button>
               <button type="button" class="btn btn-primary" @click="resetPassword">Confirmar</button>
@@ -105,7 +106,7 @@
       </div>
     </div>
 
-    <!-- MODAL DE ÉXITO (MISMO ESTILO QUE EN AdministrarEmpleados.vue) -->
+    <!-- MODAL DE ÉXITO -->
     <div
       class="modal"
       tabindex="-1"
@@ -118,7 +119,7 @@
           <div class="modal-header">
             <button type="button" class="btn-close" @click="cerrarSuccessModal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
+          <div class="d-flex justify-content-center">
             <h5 class="modal-title">{{ successMessage }}</h5>
             <button type="button" class="btn btn-primary mt-3" @click="cerrarSuccessModal">Cerrar</button>
           </div>
