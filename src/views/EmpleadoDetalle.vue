@@ -71,9 +71,11 @@
           </div>
           <div class="modal-body">
             <h5 class="modal-title">¿Estás seguro de eliminar este empleado?</h5>
-            <div class="mt-3">
-              <button type="button" class="btn btn-secondary" @click="cancelarEliminar">Cancelar</button>
-              <button type="button" class="btn btn-primary ms-2" @click="eliminarEmpleado">Eliminar</button>
+            <div class="row g-3 align-items-center mb-3">
+              <div class="col-auto text-center">
+                <button type="button" class="btn btn-secondary" @click="cancelarEliminar">Cancelar</button>
+                <button type="button" class="btn btn-primary ms-2" @click="eliminarEmpleado">Eliminar</button>
+              </div>
             </div>
           </div>
         </div>
