@@ -119,8 +119,10 @@
           <div class="modal-header">
             <button type="button" class="btn-close" @click="cerrarSuccessModal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+            <h5 class="modal-title">{{ successMessage }}</h5>            
+          </div>
           <div class="d-flex justify-content-center">
-            <h5 class="modal-title">{{ successMessage }}</h5>
             <button type="button" class="btn btn-primary mt-3" @click="cerrarSuccessModal">Cerrar</button>
           </div>
         </div>
