@@ -45,12 +45,86 @@
           <button type="button" class="btn btn-regresar" @click="regresar">
             Regresar
           </button>
-          <button type="button" class="btn btn-eliminar" @click="eliminarEmpleado">
+          <!-- Botón nuevo: Reestablecer contraseña -->
+          <button type="button" class="btn btn-reset" @click="confirmarReset">
+            Reestablecer contraseña
+          </button>
+          <button type="button" class="btn btn-eliminar" @click="confirmarEliminar">
             Eliminar
           </button>
         </div>
       </form>
     </div>
+
+    <!-- MODAL DE CONFIRMACIÓN PARA ELIMINAR EMPLEADO -->
+    <div
+      class="modal"
+      tabindex="-1"
+      :class="{ 'show d-block': showConfirmDeleteModal }"
+      v-if="showConfirmDeleteModal"
+      style="background-color: rgba(0, 0, 0, 0.5);"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+          <div class="modal-header">
+            <button type="button" class="btn-close" @click="cancelarEliminar" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h5 class="modal-title">¿Estás seguro de eliminar este empleado?</h5>
+            <div class="mt-3">
+              <button type="button" class="btn btn-secondary" @click="cancelarEliminar">Cancelar</button>
+              <button type="button" class="btn btn-primary ms-2" @click="eliminarEmpleado">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN PARA REESTABLECER CONTRASEÑA -->
+    <div
+      class="modal"
+      tabindex="-1"
+      :class="{ 'show d-block': showConfirmResetModal }"
+      v-if="showConfirmResetModal"
+      style="background-color: rgba(0, 0, 0, 0.5);"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+          <div class="modal-header">
+            <button type="button" class="btn-close" @click="cancelarReset" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h5 class="modal-title">¿Reestablecer contraseña a "Password1"?</h5>
+            <div class="mt-3">
+              <button type="button" class="btn btn-secondary" @click="cancelarReset">Cancelar</button>
+              <button type="button" class="btn btn-primary ms-2" @click="resetPassword">Confirmar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL DE ÉXITO (MISMO ESTILO QUE EN AdministrarEmpleados.vue) -->
+    <div
+      class="modal"
+      tabindex="-1"
+      :class="{ 'show d-block': showSuccessModal }"
+      v-if="showSuccessModal"
+      style="background-color: rgba(0, 0, 0, 0.5);"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center">
+          <div class="modal-header">
+            <button type="button" class="btn-close" @click="cerrarSuccessModal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <h5 class="modal-title">{{ successMessage }}</h5>
+            <button type="button" class="btn btn-primary mt-3" @click="cerrarSuccessModal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -69,6 +143,10 @@ export default {
           nombre: '',
         },
       },
+      showConfirmDeleteModal: false,
+      showConfirmResetModal: false,
+      showSuccessModal: false,
+      successMessage: ''
     };
   },
   methods: {
@@ -95,7 +173,7 @@ export default {
           email: this.empleado.email,
           estado: this.empleado.estado,
           rol: {
-            nombre: this.empleado.rol.nombre,  // ✅ Correctamente estructurado
+            nombre: this.empleado.rol.nombre,
           },
         };
 
@@ -103,7 +181,9 @@ export default {
           `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}`,
           payload
         );
-        alert('Cambios guardados exitosamente');
+        // Mensaje de éxito con el mismo estilo que agregar empleado
+        this.successMessage = 'El empleado se actualizó con éxito';
+        this.showSuccessModal = true;
       } catch (error) {
         console.error('Error al guardar los cambios:', error);
         alert('No se pudieron guardar los cambios');
@@ -112,21 +192,56 @@ export default {
     regresar() {
       this.$router.push('/admin');
     },
+    confirmarEliminar() {
+      this.showConfirmDeleteModal = true;
+    },
+    cancelarEliminar() {
+      this.showConfirmDeleteModal = false;
+    },
     async eliminarEmpleado() {
-      if (confirm('¿Estás seguro de que deseas eliminar este empleado?')) {
-        try {
-          const usuarioId = this.$route.params.usuarioId;
-          await axios.delete(
-            `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}`
-          );
-          alert('Empleado eliminado exitosamente');
-          this.$router.push('/admin');
-        } catch (error) {
-          console.error('Error al eliminar el empleado:', error);
-          alert('No se pudo eliminar el empleado');
-        }
+      try {
+        const usuarioId = this.$route.params.usuarioId;
+        await axios.delete(
+          `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}`
+        );
+        this.showConfirmDeleteModal = false;
+        // Mensaje de éxito con el mismo estilo
+        this.successMessage = 'Empleado eliminado exitosamente';
+        this.showSuccessModal = true;
+      } catch (error) {
+        console.error('Error al eliminar el empleado:', error);
+        alert('No se pudo eliminar el empleado');
       }
     },
+    // Botón para confirmar reestablecimiento de contraseña
+    confirmarReset() {
+      this.showConfirmResetModal = true;
+    },
+    cancelarReset() {
+      this.showConfirmResetModal = false;
+    },
+    async resetPassword() {
+      try {
+        const usuarioId = this.$route.params.usuarioId;
+        await axios.post(
+          `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}/reset-password`
+        );
+        this.showConfirmResetModal = false;
+        // Mensaje de éxito con el mismo estilo
+        this.successMessage = 'La contraseña se reestableció con éxito';
+        this.showSuccessModal = true;
+      } catch (error) {
+        console.error('Error al reestablecer la contraseña:', error);
+        alert('No se pudo reestablecer la contraseña');
+      }
+    },
+    cerrarSuccessModal() {
+      this.showSuccessModal = false;
+      // Si el empleado se eliminó, volver a la lista
+      if (this.successMessage.includes('eliminado')) {
+        this.$router.push('/admin');
+      }
+    }
   },
   mounted() {
     this.obtenerEmpleado();
@@ -168,10 +283,56 @@ export default {
   border: none;
 }
 
-.btn-regresar,
+.btn-regresar {
+  background-color: #EBEDED;
+  color: #193238;
+  border: none;
+}
+
 .btn-eliminar {
   background-color: #EBEDED;
   color: #193238;
   border: none;
 }
+
+.btn-reset {
+  background-color: #EBEDED;
+  color: #193238;
+  border: none;
+}
+
+/* Modal con estilo similar a AdministrarEmpleados.vue */
+.modal-title {
+  color: #193238;
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+}
+
+.modal-header .btn-close {
+  background: none;
+  border: none;
+}
+
+.modal-content {
+  border-radius: 8px;
+}
+
+.btn-secondary {
+  background-color: #EBEDED;
+  color: #193238;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  width: 100px;
+}
+
+.btn-primary {
+  background-color: #17C6ED;
+  color: #FFFFFF;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  width: 100px;
+}
+
 </style>
