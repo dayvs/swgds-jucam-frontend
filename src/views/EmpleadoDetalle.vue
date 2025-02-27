@@ -95,10 +95,10 @@
             <button type="button" class="btn-close" @click="cancelarReset" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <h5 class="modal-title">¿Reestablecer contraseña a "Password1"?</h5>
-            <div class="mt-3">
-              <button type="button" class="btn btn-secondary" @click="cancelarReset">Cancelar</button>
-              <button type="button" class="btn btn-primary ms-2" @click="resetPassword">Confirmar</button>
+            <h5 class="modal-title">¿Reestablecer contraseña?</h5>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-secondary me-2" @click="cancelarReset">Cancelar</button>
+              <button type="button" class="btn btn-primary" @click="resetPassword">Confirmar</button>
             </div>
           </div>
         </div>
