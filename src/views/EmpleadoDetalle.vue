@@ -124,6 +124,7 @@
           </div>
           <div class="d-flex justify-content-center">
             <button type="button" class="btn btn-primary mt-3" @click="cerrarSuccessModal">Cerrar</button>
+            <p></p>
           </div>
         </div>
       </div>
