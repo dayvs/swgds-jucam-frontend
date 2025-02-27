@@ -123,9 +123,9 @@
             <h5 class="modal-title">{{ successMessage }}</h5>            
           </div>
           <div class="d-flex justify-content-center">
-            <button type="button" class="btn btn-primary mt-3" @click="cerrarSuccessModal">Cerrar</button>
-            <p></p>
+            <button type="button" class="btn btn-primary" @click="cerrarSuccessModal">Cerrar</button>            
           </div>
+          <p></p>
         </div>
       </div>
     </div>
