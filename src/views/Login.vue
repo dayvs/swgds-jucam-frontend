@@ -202,7 +202,7 @@ export default {
         );
         if (response.status === 200) {
           // Almacenar indicador de sesión
-          localStorage.setItem('user', JSON.stringify({ email: this.email }));
+          localStorage.setItem('user', JSON.stringify(response.data));
           // Redirigir a la sección de empleados
           this.$router.push('/empleados');
         }

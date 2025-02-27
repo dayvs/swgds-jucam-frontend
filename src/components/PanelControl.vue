@@ -2,7 +2,8 @@
   <div class="panel-control">
     <h2 class="title">Panel de Control</h2>
     <ul class="menu">
-      <li @click="navigateTo('admin')">
+      <!-- Mostrar Administrar empleados solo si el rol es Administrador -->
+      <li v-if="userRole === 'Administrador'" @click="navigateTo('admin')">
         <i class="fas fa-users"></i> Administrar empleados
       </li>
       <li @click="navigateTo('reportes')">
@@ -18,6 +19,17 @@
 <script>
 export default {
   name: 'PanelControl',
+  data() {
+    return {
+      userRole: ''
+    };
+  },
+  mounted() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.rol) {
+      this.userRole = user.rol;
+    }
+  },
   methods: {
     navigateTo(route) {
       this.$router.push(`/${route}`);
@@ -34,19 +46,16 @@ export default {
 .panel-control {
   padding: 20px;
 }
-
 .title {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
   margin-bottom: 20px;
 }
-
 .menu {
   list-style: none;
   padding: 0;
 }
-
 .menu li {
   cursor: pointer;
   color: #193238;
@@ -56,7 +65,6 @@ export default {
   display: flex;
   align-items: center;
 }
-
 .menu li i {
   margin-right: 10px;
 }
