@@ -198,7 +198,7 @@ export default {
     async login() {
       this.errorMessage = '';
       if (!this.email || !this.password) {
-        this.errorMessage = 'El Usuario y la Contraseña son obligatorios';
+        this.errorMessage = 'El usuario y la contraseña son obligatorios';
         return;
       }
       if (this.email.length < 4 || this.password.length < 4) {
