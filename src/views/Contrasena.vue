@@ -1,79 +1,83 @@
 <template>
-    <div class="contrasena-page" style="background-color: #F6F8F9;">
+    <div class="contrasena-page">
       <div class="container py-5">
         <h2 class="title">Reestablecer contraseña</h2>
-        <form @submit.prevent="guardar">
-          <!-- Campo de usuario -->
-          <div class="mb-3">
-            <label for="usuario" class="form-label">Usuario (correo):</label>
-            <input 
-              type="email" 
-              id="usuario" 
-              v-model="usuario" 
-              class="form-control" 
-              placeholder="Ingresa tu correo" 
-              required
-            >
-            <div v-if="errorUsuario" class="text-danger mt-1">{{ errorUsuario }}</div>
-          </div>
-          <!-- Campo: contraseña anterior -->
-          <div class="mb-3">
-            <label for="oldPassword" class="form-label">Introduce tu contraseña anterior:</label>
-            <input 
-              type="password" 
-              id="oldPassword" 
-              v-model="oldPassword" 
-              class="form-control" 
-              placeholder="Contraseña por default: Password1" 
-              required
-            >
-          </div>
-          <!-- Campo: nueva contraseña -->
-          <div class="mb-3">
-            <label for="newPassword" class="form-label">Introduce tu nueva contraseña:</label>
-            <input 
-              type="password" 
-              id="newPassword" 
-              v-model="newPassword" 
-              class="form-control" 
-              required
-            >
-            <div v-if="errorNewSame" class="text-danger mt-1">{{ errorNewSame }}</div>
-          </div>
-          <!-- Campo: confirmar nueva contraseña -->
-          <div class="mb-3">
-            <label for="confirmPassword" class="form-label">Confirma tu nueva contraseña:</label>
-            <input 
-              type="password" 
-              id="confirmPassword" 
-              v-model="confirmPassword" 
-              class="form-control" 
-              required
-            >
-            <div v-if="errorNotMatch" class="text-danger mt-1">{{ errorNotMatch }}</div>
-          </div>
-          <!-- Botones: Cancelar y Guardar -->
-          <div class="modal-footer">
-            <button 
-              type="button" 
-              class="btn btn-secondary" 
-              @click="cancelar"
-            >
-              Cancelar
-            </button>
-            <button 
-              type="submit" 
-              class="btn btn-primary" 
-              :disabled="loading"
-            >
-              <span v-if="loading" class="spinner-border spinner-border-sm"></span>
-              <span v-else>Guardar</span>
-            </button>
-          </div>
-          <div v-if="serverError" class="text-danger text-center mt-2">
-            {{ serverError }}
-          </div>
-        </form>
+        <div class="form-container">
+          <form @submit.prevent="guardar">
+            <!-- Campo de usuario -->
+            <div class="mb-3">
+              <label for="usuario" class="form-label">Usuario (correo):</label>
+              <input 
+                type="email" 
+                id="usuario" 
+                v-model="usuario" 
+                class="form-control" 
+                placeholder="Ingresa tu correo" 
+                required
+              >
+              <div v-if="errorUsuario" class="text-danger mt-1">{{ errorUsuario }}</div>
+            </div>
+            <!-- Campo: contraseña anterior -->
+            <div class="mb-3">
+              <label for="oldPassword" class="form-label">Introduce tu contraseña anterior:</label>
+              <input 
+                type="password" 
+                id="oldPassword" 
+                v-model="oldPassword" 
+                class="form-control" 
+                placeholder="Contraseña por default: Password1" 
+                required
+              >
+            </div>
+            <!-- Campo: nueva contraseña -->
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">Introduce tu nueva contraseña:</label>
+              <input 
+                type="password" 
+                id="newPassword" 
+                v-model="newPassword" 
+                class="form-control" 
+                required
+              >
+              <div v-if="errorNewSame" class="text-danger mt-1">{{ errorNewSame }}</div>
+            </div>
+            <!-- Campo: confirmar nueva contraseña -->
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirma tu nueva contraseña:</label>
+              <input 
+                type="password" 
+                id="confirmPassword" 
+                v-model="confirmPassword" 
+                class="form-control" 
+                required
+              >
+              <div v-if="errorNotMatch" class="text-danger mt-1">{{ errorNotMatch }}</div>
+            </div>
+            <!-- Botones: Cancelar y Guardar -->
+            <div class="modal-footer">
+                <div class="d-flex justify-content-center">
+                    <button 
+                        type="button" 
+                        class="btn btn-secondary me-2" 
+                        @click="cancelar"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="btn btn-primary" 
+                        :disabled="loading"
+                    >
+                        <span v-if="loading" class="spinner-border spinner-border-sm"></span>
+                        <span v-else>Guardar</span>
+                    </button>
+                    </div>
+                </div>
+            <div v-if="serverError" class="text-danger text-center mt-2">
+              {{ serverError }}
+            </div>
+          </form>
+        </div>
       </div>
   
       <!-- Modal de confirmación de envío de correo -->
@@ -135,7 +139,6 @@
     },
     methods: {
       cancelar() {
-        // Redirigir al login sin hacer nada
         this.$router.push('/login');
       },
       async guardar() {
@@ -163,8 +166,7 @@
         
         this.loading = true;
         try {
-          // Llamada al endpoint para cambiar la contraseña usando el correo ingresado
-          // Se utiliza el mismo endpoint de cambiar contraseña
+          // Se usa el mismo endpoint para cambiar la contraseña
           const response = await axios.put('https://swgds-jucam-backend.onrender.com/usuarios/cambiar-password', {
             email: this.usuario,
             oldPassword: this.oldPassword,
@@ -172,7 +174,6 @@
             confirmPassword: this.confirmPassword
           });
           if (response.status === 200) {
-            // Asumimos que, en caso de éxito, el back-end también envía el correo con las instrucciones
             this.showConfirmModal = true;
           }
         } catch (error) {
@@ -187,7 +188,6 @@
       },
       cerrarConfirmModal() {
         this.showConfirmModal = false;
-        // Simplemente cerrar el modal; aquí no se redirige al login (o se puede redirigir si se desea)
       }
     }
   };
@@ -203,6 +203,10 @@
     font-weight: 700;
     margin-bottom: 20px;
     text-align: center;
+  }
+  .form-container {
+    max-width: 400px;
+    margin: 0 auto;
   }
   .form-label {
     color: #193238;
