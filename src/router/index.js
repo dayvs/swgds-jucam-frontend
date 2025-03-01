@@ -11,6 +11,7 @@ import EmpleadoDashboard from '../views/EmpleadoDashboard.vue';
 import AdministrarEmpleados from '../views/AdministrarEmpleados.vue';
 import EmpleadoDetalle from '../views/EmpleadoDetalle.vue';
 import Reportes from '../views/Reportes.vue';
+import Contrasena from '../views/Contrasena.vue';
 
 
 
@@ -58,6 +59,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+  },
+  {
+    path: '/contrasena',
+    name: 'Contrasena',
+    component: Contrasena,
   },
   {
     path: '/empleados',
