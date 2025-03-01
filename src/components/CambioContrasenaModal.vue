@@ -100,7 +100,7 @@
             class="btn btn-primary mt-3" 
             @click="cerrarSuccessModal"
           >
-            Cerrar
+            Aceptar
           </button>
         </div>
       </div>
