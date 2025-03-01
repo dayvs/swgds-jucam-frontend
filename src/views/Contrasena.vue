@@ -55,21 +55,23 @@
           </div>
           <!-- Botones: Cancelar y Guardar -->
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="cancelar"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              :disabled="loading"
-            >
-              <span v-if="loading" class="spinner-border spinner-border-sm"></span>
-              <span v-else>Guardar</span>
-            </button>
+            <div class="d-flex justify-content-center">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                @click="cancelar"
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                :disabled="loading"
+              >
+                <span v-if="loading" class="spinner-border spinner-border-sm"></span>
+                <span v-else>Guardar</span>
+              </button>
+            </div>
           </div>
           <div v-if="serverError" class="text-danger text-center mt-2">
             {{ serverError }}
