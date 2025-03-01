@@ -51,21 +51,21 @@
             <div class="modal-footer">
                 <!-- Botón "Cerrar" forzará cierre de sesión y a /login -->
                 <div class="d-flex justify-content-center">
-                <button 
-                  type="button" 
-                  class="btn btn-secondary me-2" 
-                  @click="cerrar"
-                >
-                  Cerrar
-                </button>
-                <!-- Botón "Guardar" ejecuta guardar() -->
-                <button 
-                  type="submit" 
-                  class="btn btn-primary"
-                >
-                  Guardar
-                </button>
-              </div>
+                  <button 
+                    type="button" 
+                    class="btn btn-secondary me-2" 
+                    @click="cerrar"
+                  >
+                    Cerrar
+                  </button>
+                  <!-- Botón "Guardar" ejecuta guardar() -->
+                  <button 
+                    type="submit" 
+                    class="btn btn-primary"
+                  >
+                    Guardar
+                  </button>
+                </div>
             </div>
             <div v-if="serverError" class="text-danger text-center mt-2">
               {{ serverError }}

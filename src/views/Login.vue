@@ -72,7 +72,7 @@
       <!-- Olvidaste tu contraseña -->
       <p class="forgot-password mt-3" @click="openModal">¿Olvidaste tu contraseña?</p>
 
-      <!-- Modal -->
+      <!-- Modal de reinicio de contraseña -->
       <div
         class="modal"
         tabindex="-1"
@@ -91,61 +91,83 @@
                 aria-label="Close"
               ></button>
             </div>
-            <!-- Cuerpo del Modal -->
             <div class="modal-body text-center">
-              <template v-if="!resetMessage">
-                <label for="resetEmail" class="form-label">Ingresa tu correo</label>
-                <input
-                  type="email"
-                  id="resetEmail"
-                  v-model="resetEmail"
-                  class="form-control"
-                  placeholder="correo@ejemplo.com"
-                />
-              </template>
-              <template v-else>
-                <p>{{ resetMessage }}</p>
-              </template>
+              <label for="resetEmail" class="form-label">Ingresa tu correo</label>
+              <input
+                type="email"
+                id="resetEmail"
+                v-model="resetEmail"
+                class="form-control"
+                placeholder="correo@ejemplo.com"
+              />
+              <div v-if="resetMessage" class="text-danger mt-2">{{ resetMessage }}</div>
             </div>
-            <!-- Pie del Modal -->
             <div class="modal-footer justify-content-center">
-              <template v-if="!resetMessage">
-                <!-- Botón de Cerrar -->
-                <button
-                  v-if="!resetInProgress"
-                  type="button"
-                  class="btn btn-secondary-custom"
-                  @click="closeModal"
-                >
-                  Cerrar
-                </button>
-                <!-- Botón de Reiniciar Contraseña -->
-                <button
-                  v-if="!resetInProgress"
-                  type="button"
-                  class="btn btn-primary"
-                  @click="resetPassword"
-                >
-                  Reiniciar contraseña
-                </button>
-                <button v-else type="button" class="btn btn-primary" disabled>
-                  <span
-                    class="spinner-border spinner-border-sm"
-                    role="status"
-                    aria-hidden="true"
-                  ></span>
-                </button>
-              </template>
-              <template v-else>
-                <!-- Botón de Cerrar después de Reiniciar Contraseña -->
-                <button type="button" class="btn btn-primary" @click="closeModal">
-                  Cerrar
-                </button>
-              </template>
+              <button
+                v-if="!resetInProgress"
+                type="button"
+                class="btn btn-secondary-custom"
+                @click="closeModal"
+              >
+                Cerrar
+              </button>
+              <button
+                v-if="!resetInProgress"
+                type="button"
+                class="btn btn-primary"
+                @click="resetPassword"
+              >
+                Reiniciar contraseña
+              </button>
+              <button v-else type="button" class="btn btn-primary" disabled>
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Modal de confirmación de reinicio de contraseña -->
+      <div
+        class="modal"
+        tabindex="-1"
+        :class="{ 'show d-block': showResetConfirmModal }"
+        v-if="showResetConfirmModal"
+        style="background-color: rgba(0, 0, 0, 0.5);"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content text-center">
+            <div class="modal-header">
+              <button
+                type="button"
+                class="btn-close"
+                @click="closeResetConfirmModal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <h5 class="modal-title">
+                Se envió un correo con las instrucciones para reestablecer tu contraseña
+              </h5>
+            </div>
+            <div class="d-flex justify-content-center mb-3">
+              <button
+                type="button"
+                class="btn"
+                style="background-color: #17C6ED; color: #FFFFFF;"
+                @click="closeResetConfirmModal"
+              >
+                Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -165,6 +187,7 @@ export default {
       resetEmail: '',
       resetInProgress: false,
       resetMessage: '',
+      showResetConfirmModal: false,
       loginInProgress: false, // estado para controlar la animación de loading
     };
   },
@@ -191,7 +214,7 @@ export default {
         this.errorMessage = 'El correo debe tener un formato válido';
         return;
       }
-      this.loginInProgress = true; // Activar animación de loading
+      this.loginInProgress = true;
       try {
         const response = await axios.post(
           'https://swgds-jucam-backend.onrender.com/auth/login',
@@ -201,9 +224,7 @@ export default {
           }
         );
         if (response.status === 200) {
-          // Almacenar indicador de sesión
           localStorage.setItem('user', JSON.stringify(response.data));
-          // Redirigir a la sección de empleados
           this.$router.push('/empleados');
         }
       } catch (error) {
@@ -213,11 +234,13 @@ export default {
           this.errorMessage = 'Ocurrió un error. Por favor, intenta nuevamente.';
         }
       } finally {
-        this.loginInProgress = false; // Desactivar animación de loading
+        this.loginInProgress = false;
       }
     },
     openModal() {
       this.showModal = true;
+      this.resetEmail = '';
+      this.resetMessage = '';
     },
     closeModal() {
       this.showModal = false;
@@ -238,60 +261,58 @@ export default {
       this.resetInProgress = true;
       try {
         const response = await axios.post(
-          'https://swgds-jucam-backend.onrender.com/auth/forgot-password',
+          'https://swgds-jucam-backend.onrender.com/auth/reiniciar-password',
           null,
-          {
-            params: {
-              email: this.resetEmail,
-            },
-          }
+          { params: { email: this.resetEmail } }
         );
         if (response.status === 200) {
-          this.resetMessage = 'Te enviamos un correo para reestablecer tu contraseña';
+          this.resetMessage = '';
+          this.showModal = false;
+          this.showResetConfirmModal = true;
         }
       } catch (error) {
-        this.resetMessage =
-          'Ocurrió un error al enviar el correo. Por favor, intenta nuevamente.';
+        if (error.response && error.response.data) {
+          this.resetMessage = error.response.data;
+        } else {
+          this.resetMessage = 'No se pudo reestablecer tu contraseña. Intenta de nuevo más tarde.';
+        }
       } finally {
         this.resetInProgress = false;
       }
+    },
+    closeResetConfirmModal() {
+      this.showResetConfirmModal = false;
     },
   },
 };
 </script>
 
 <style scoped>
-/* Estilos existentes */
 .section-title {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
 }
-
 .main-title {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
 }
-
 .cta-text {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
 }
-
 .form-label {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
 }
-
 .form-control::placeholder {
   color: #7E8A8C;
   font-family: 'Inter', sans-serif;
   font-weight: 400;
 }
-
 .btn-primary {
   background-color: #17C6ED;
   color: #FFFFFF;
@@ -299,13 +320,11 @@ export default {
   font-weight: 500;
   border: none;
 }
-
 .error-message {
   color: #EA3232;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
 }
-
 .forgot-password {
   color: #193238;
   font-family: 'Inter', sans-serif;
@@ -313,40 +332,32 @@ export default {
   cursor: pointer;
   text-decoration: underline;
 }
-
 .modal {
   background-color: rgba(0, 0, 0, 0.5);
 }
-
 .modal.show {
   display: block;
 }
-
 .modal-content {
   background-color: #FFFFFF;
 }
-
 .modal-header,
 .modal-body,
 .modal-footer {
   border: none;
 }
-
 .modal-title {
   color: #193238;
   font-family: 'Inter', sans-serif;
   font-weight: 700;
 }
-
 .btn-close {
   background: none;
   border: none;
 }
-
 .spinner-border {
-  color: #FFFFFF; /* Color del spinner */
+  color: #FFFFFF;
 }
-
 .btn-secondary-custom {
   background-color: #EBEDED;
   color: #193238;
