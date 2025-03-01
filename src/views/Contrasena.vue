@@ -58,7 +58,7 @@
             <div class="d-flex justify-content-center">
               <button
                 type="button"
-                class="btn btn-secondary"
+                class="btn btn-secondary me-3"
                 @click="cancelar"
               >
                 Cancelar
