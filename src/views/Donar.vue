@@ -153,7 +153,7 @@ export default {
       if (!this.monto) {
         this.errores.monto = 'Este campo es obligatorio';
       } else if (!this.monto.match(montoRegex)) {
-        this.errores.monto = 'Ingresa un monto correcto';
+        this.errores.monto = 'Ingresa un monto correcto. Máximo 2 decimales.';
       } else {
         this.errores.monto = '';
       }
