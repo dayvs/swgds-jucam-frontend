@@ -11,6 +11,8 @@
             v-model="empleado.nombre"
             class="form-control"
           />
+          <!-- Mensaje de error para Nombre -->
+          <div class="text-danger" v-if="errors.nombre">{{ errors.nombre }}</div>
         </div>
         <div class="mb-3">
           <label for="apellidos" class="form-label">Apellidos</label>
@@ -20,6 +22,8 @@
             v-model="empleado.apellidos"
             class="form-control"
           />
+          <!-- Mensaje de error para Apellidos -->
+          <div class="text-danger" v-if="errors.apellidos">{{ errors.apellidos }}</div>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Correo electrónico</label>
@@ -29,6 +33,8 @@
             v-model="empleado.email"
             class="form-control"
           />
+          <!-- Mensaje de error para Correo -->
+          <div class="text-danger" v-if="errors.email">{{ errors.email }}</div>
         </div>
         <div class="mb-3">
           <label for="rol" class="form-label">Rol</label>
@@ -148,6 +154,12 @@ export default {
           nombre: '',
         },
       },
+      // Propiedad para almacenar los mensajes de error de cada campo
+      errors: {
+        nombre: '',
+        apellidos: '',
+        email: ''
+      },
       showConfirmDeleteModal: false,
       showConfirmResetModal: false,
       showSuccessModal: false,
@@ -155,6 +167,63 @@ export default {
     };
   },
   methods: {
+    // Función que valida el formulario según las reglas solicitadas
+    validarFormulario() {
+      let valido = true;
+      // Reiniciamos los mensajes de error
+      this.errors.nombre = '';
+      this.errors.apellidos = '';
+      this.errors.email = '';
+
+      // --- Validación para Nombre ---
+      if (!this.empleado.nombre.trim()) {
+        this.errors.nombre = 'Este campo es obligatorio';
+        valido = false;
+      } else if (this.empleado.nombre.trim().length < 3 || this.empleado.nombre.trim().length > 50) {
+        this.errors.nombre = 'El nombre debe tener mínimo 3 y máximo 50 caracteres';
+        valido = false;
+      } else {
+        // Solo se permiten letras (incluyendo acentuadas) y espacios
+        const regexNombre = /^[\p{L}\s]+$/u;
+        if (!regexNombre.test(this.empleado.nombre.trim())) {
+          this.errors.nombre = 'No se permiten números o símbolos. Ingresa un nombre válido';
+          valido = false;
+        }
+      }
+
+      // --- Validación para Apellidos ---
+      if (!this.empleado.apellidos.trim()) {
+        this.errors.apellidos = 'Este campo es obligatorio';
+        valido = false;
+      } else if (this.empleado.apellidos.trim().length < 3 || this.empleado.apellidos.trim().length > 50) {
+        this.errors.apellidos = 'Los apellidos deben tener mínimo 3 y máximo 50 caracteres';
+        valido = false;
+      } else {
+        const regexApellidos = /^[\p{L}\s]+$/u;
+        if (!regexApellidos.test(this.empleado.apellidos.trim())) {
+          this.errors.apellidos = 'No se permiten números o símbolos. Ingresa un apellido válido';
+          valido = false;
+        }
+      }
+
+      // --- Validación para Correo electrónico ---
+      if (!this.empleado.email.trim()) {
+        this.errors.email = 'Este campo es obligatorio';
+        valido = false;
+      } else if (this.empleado.email.trim().length < 3 || this.empleado.email.trim().length > 50) {
+        this.errors.email = 'El correo debe tener mínimo 3 y máximo 50 caracteres';
+        valido = false;
+      } else {
+        // Validación simple del formato de correo
+        const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!regexEmail.test(this.empleado.email.trim())) {
+          this.errors.email = 'Ingresa un correo electrónico válido';
+          valido = false;
+        }
+      }
+
+      return valido;
+    },
     async obtenerEmpleado() {
       try {
         const usuarioId = this.$route.params.usuarioId;
@@ -170,6 +239,10 @@ export default {
       }
     },
     async guardarCambios() {
+      // Primero validamos el formulario
+      if (!this.validarFormulario()) {
+        return;
+      }
       try {
         const usuarioId = this.$route.params.usuarioId;
         const payload = {
@@ -186,7 +259,7 @@ export default {
           `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}`,
           payload
         );
-        // Mensaje de éxito con el mismo estilo que agregar empleado
+        // Si la actualización es exitosa, mostramos el mensaje de éxito
         this.successMessage = 'El empleado se actualizó con éxito';
         this.showSuccessModal = true;
       } catch (error) {
@@ -210,7 +283,6 @@ export default {
           `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}`
         );
         this.showConfirmDeleteModal = false;
-        // Mensaje de éxito con el mismo estilo
         this.successMessage = 'Empleado eliminado exitosamente';
         this.showSuccessModal = true;
       } catch (error) {
@@ -218,7 +290,6 @@ export default {
         alert('No se pudo eliminar el empleado');
       }
     },
-    // Botón para confirmar reestablecimiento de contraseña
     confirmarReset() {
       this.showConfirmResetModal = true;
     },
@@ -232,7 +303,6 @@ export default {
           `https://swgds-jucam-backend.onrender.com/usuarios/${usuarioId}/reset-password`
         );
         this.showConfirmResetModal = false;
-        // Mensaje de éxito con el mismo estilo
         this.successMessage = 'La contraseña se reestableció con éxito';
         this.showSuccessModal = true;
       } catch (error) {
@@ -242,7 +312,7 @@ export default {
     },
     cerrarSuccessModal() {
       this.showSuccessModal = false;
-      // Si el empleado se eliminó, volver a la lista
+      // Si el empleado se eliminó, redirige a la lista
       if (this.successMessage.includes('eliminado')) {
         this.$router.push('/admin');
       }
@@ -340,4 +410,10 @@ export default {
   width: 100px;
 }
 
+/* Estilo para los mensajes de error */
+.text-danger {
+  color: red;
+  font-size: 0.875em;
+  margin-top: 4px;
+}
 </style>
