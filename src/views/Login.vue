@@ -50,7 +50,7 @@
         </div>
 
         <!-- contenedor para el recaptcha -->
-        <div class="d-flex justify-content-center my-3">
+        <div v-if="showRecaptcha" class="d-flex justify-content-center my-3">
           <div ref="recaptchaContainer" id="recaptcha-container"></div>
         </div>
 
@@ -195,7 +195,8 @@ export default {
       resetMessage: '',
       showResetConfirmModal: false,
       loginInProgress: false, // estado para controlar la animación de loading
-      widgetId: null,   // <— aquí se guarda el ID del widget
+      widgetId: null,   // aquí se guarda el ID del widget
+      showRecaptcha: true,       // Se oculta la caja del recaptcha en cuanto se valide
     };
   },
   mounted() {
@@ -203,7 +204,10 @@ export default {
       if (window.grecaptcha && window.grecaptcha.render) {
         this.widgetId = window.grecaptcha.render(
           this.$refs.recaptchaContainer,
-          { sitekey: '6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs' }
+          {
+            sitekey: '6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs',
+            callback: this.onRecaptchaSuccess 
+          }
         );
       } else {
         setTimeout(initRecaptcha, 200);
@@ -214,6 +218,11 @@ export default {
   methods: {
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
+    },
+    // se llama cuando el usuario completa el recaptcha
+    onRecaptchaSuccess(token) {
+      this.showRecaptcha = false;       // oculta el widget
+      // el token queda disponible en grecaptcha.getResponse(this.widgetId)
     },
     async login() {
       this.errorMessage = '';
@@ -264,6 +273,7 @@ export default {
       } finally {
         this.loginInProgress = false;
         window.grecaptcha.reset(this.widgetId);
+        this.showRecaptcha = true;
       }
     },
     openModal() {
