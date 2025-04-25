@@ -197,15 +197,17 @@ export default {
     };
   },
   mounted() {
-    // Google llamará a esta función cuando cargue la librería
-    window.vueRecaptchaLoaded = () => {
-      this.widgetId = window.grecaptcha.render(
-        this.$refs.recaptchaContainer,
-        {
-          sitekey: '6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs'
-        }
-      );
+    const initRecaptcha = () => {
+      if (window.grecaptcha && window.grecaptcha.render) {
+        this.widgetId = window.grecaptcha.render(
+          this.$refs.recaptchaContainer,
+          { sitekey: '6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs' }
+        );
+      } else {
+        setTimeout(initRecaptcha, 200);
+      }
     };
+    initRecaptcha();
   },
   methods: {
     togglePasswordVisibility() {
@@ -215,8 +217,8 @@ export default {
       this.errorMessage = '';
 
       // Se obtiene el token para este widget en particular
-      const captchaResponse = window.grecaptcha.getResponse(this.widgetId);
-      if (!captchaResponse) {
+      const token = window.grecaptcha.getResponse(this.widgetId);
+      if (!token) {
         this.errorMessage = 'Por favor completa el CAPTCHA';
         return;
       }
@@ -244,7 +246,7 @@ export default {
           {
             email: this.email,
             password: this.password,
-            recaptchaToken: captchaResponse
+            recaptchaToken: token
           }
         );
         if (response.status === 200) {
