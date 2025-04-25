@@ -48,6 +48,11 @@
         <div v-if="errorMessage" class="error-message mt-2 text-center">
           {{ errorMessage }}
         </div>
+        +   <!-- reCAPTCHA v2 widget -->
+        <div
+          class="g-recaptcha my-3"
+          data-sitekey="6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs"
+        ></div>
         <!-- Botón de Envío con Animación de Loading -->
         <div class="text-center">
           <button
@@ -197,6 +202,13 @@ export default {
     },
     async login() {
       this.errorMessage = '';
+      
+      // Comprobar si el usuario resolvió el CAPTCHA
+      const captchaResponse = window.grecaptcha?.getResponse();
+      if (!captchaResponse) {
+        this.errorMessage = 'Por favor completa el CAPTCHA';
+        return;
+      }
       if (!this.email || !this.password) {
         this.errorMessage = 'El usuario y la contraseña son obligatorios';
         return;
@@ -221,6 +233,7 @@ export default {
           {
             email: this.email,
             password: this.password,
+            recaptchaToken: captchaResponse
           }
         );
         if (response.status === 200) {
@@ -235,6 +248,7 @@ export default {
         }
       } finally {
         this.loginInProgress = false;
+        window.grecaptcha.reset();
       }
     },
     openModal() {
