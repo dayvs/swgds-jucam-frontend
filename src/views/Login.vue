@@ -50,7 +50,9 @@
         </div>
 
         <!-- contenedor para el recaptcha -->
-        <div ref="recaptchaContainer" id="recaptcha-container" class="my-3"></div>
+        <div class="d-flex justify-content-center my-3">
+          <div ref="recaptchaContainer" id="recaptcha-container"></div>
+        </div>
 
         <!-- Botón de Envío con Animación de Loading -->
         <div class="text-center">
