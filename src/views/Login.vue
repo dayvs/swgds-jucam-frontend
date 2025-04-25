@@ -48,7 +48,7 @@
         <div v-if="errorMessage" class="error-message mt-2 text-center">
           {{ errorMessage }}
         </div>
-        +   <!-- reCAPTCHA v2 widget -->
+        <!-- reCAPTCHA v2 widget -->
         <div
           class="g-recaptcha my-3"
           data-sitekey="6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs"
@@ -202,7 +202,7 @@ export default {
     },
     async login() {
       this.errorMessage = '';
-      
+
       // Comprobar si el usuario resolvió el CAPTCHA
       const captchaResponse = window.grecaptcha?.getResponse();
       if (!captchaResponse) {
