@@ -404,4 +404,9 @@
     font-weight: 500;
     border: none;
   }
+
+  [d-show="false"] {
+    display: none !important;
+  }
+
   </style>
