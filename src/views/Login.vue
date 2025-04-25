@@ -48,11 +48,10 @@
         <div v-if="errorMessage" class="error-message mt-2 text-center">
           {{ errorMessage }}
         </div>
-        <!-- reCAPTCHA v2 widget -->
-        <div
-          class="g-recaptcha my-3"
-          data-sitekey="6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs"
-        ></div>
+
+        <!-- contenedor para el recaptcha -->
+        <div ref="recaptchaContainer" id="recaptcha-container" class="my-3"></div>
+
         <!-- Botón de Envío con Animación de Loading -->
         <div class="text-center">
           <button
@@ -194,6 +193,18 @@ export default {
       resetMessage: '',
       showResetConfirmModal: false,
       loginInProgress: false, // estado para controlar la animación de loading
+      widgetId: null,   // <— aquí se guarda el ID del widget
+    };
+  },
+  mounted() {
+    // Google llamará a esta función cuando cargue la librería
+    window.vueRecaptchaLoaded = () => {
+      this.widgetId = window.grecaptcha.render(
+        this.$refs.recaptchaContainer,
+        {
+          sitekey: '6Lc8pCQrAAAAACBxYueNqOIPX5BldeWV4AiCQKPs'
+        }
+      );
     };
   },
   methods: {
@@ -203,8 +214,8 @@ export default {
     async login() {
       this.errorMessage = '';
 
-      // Comprobar si el usuario resolvió el CAPTCHA
-      const captchaResponse = window.grecaptcha?.getResponse();
+      // Se obtiene el token para este widget en particular
+      const captchaResponse = window.grecaptcha.getResponse(this.widgetId);
       if (!captchaResponse) {
         this.errorMessage = 'Por favor completa el CAPTCHA';
         return;
@@ -248,7 +259,7 @@ export default {
         }
       } finally {
         this.loginInProgress = false;
-        window.grecaptcha.reset();
+        window.grecaptcha.reset(this.widgetId);
       }
     },
     openModal() {

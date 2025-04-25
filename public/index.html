@@ -8,9 +8,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:400,500,700&display=swap">
     <title><%= htmlWebpackPlugin.options.title %></title>
 
-    <!-- START reCAPTCHA v2 -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <!-- END   reCAPTCHA v2 -->
+    <!-- reCaptcha -->
+    <script
+      src="https://www.google.com/recaptcha/api.js?onload=vueRecaptchaLoaded&render=explicit"
+      async defer
+    ></script>  
 
   </head>
   <body>
