@@ -124,6 +124,18 @@ export default {
     validarCampo(campo) {
       if (!this[campo]) {
         this.errores[campo] = 'Este campo es obligatorio';
+        return;
+      }
+
+      // Validación específica para "nombre": no permitir dígitos
+      if (campo === 'nombre') {
+        const tieneNumero = /\d/.test(this.nombre);
+        if (tieneNumero) {
+          this.errores.nombre = 'El nombre no puede contener números';
+          return;
+        } else {
+          this.errores.nombre = '';
+        }
       } else {
         this.errores[campo] = '';
       }
