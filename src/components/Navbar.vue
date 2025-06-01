@@ -19,6 +19,14 @@
           <span v-else class="breadcrumb-item">{{ crumb.label }}</span>
         </template>
       </span>
+      <!-- Botón “Regresar” con ícono -->
+      <div class="mt-2">
+        <button @click="goBack"
+                class="btn btn-link p-0 d-flex align-items-center">
+          <i class="fas fa-arrow-left"></i>
+          <span class="ms-1">Regresar</span>
+        </button>
+      </div>
     </div>
   </nav>
 </template>
@@ -35,6 +43,12 @@ export default {
         : [];
     },
   },
+  methods: {
+    goBack() {
+      // Regresa a la página anterior del historial
+      this.$router.back();
+    }
+  }
 };
 </script>
 
