@@ -92,4 +92,18 @@ export default {
   text-decoration: underline;
 }
 
+.btn-link {
+  color: #193238;
+  font-weight: 500;
+}
+
+.btn-link:hover {
+  text-decoration: underline;
+  color: #193238;
+}
+
+.btn-link i {
+  font-size: 1rem;
+}
+
 </style>
