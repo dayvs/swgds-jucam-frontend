@@ -95,10 +95,11 @@ export default {
 .btn-link {
   color: #193238;
   font-weight: 500;
+  text-decoration: none
 }
 
 .btn-link:hover {
-  text-decoration: underline;
+  text-decoration: none;
   color: #193238;
 }
 
